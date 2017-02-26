@@ -15,13 +15,13 @@ public class Main {
 //
 //        field("email")
 //            .when(otherFieldProvided())
-//                .then(notNull("CAN_NOT_BE_NULL"), notEmpty("CAN_NOT_BE_EMPTY"))
+//                .then(notNull("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
 //            .minLenght(1)
 //            .maxLength(6);
 //
 //        field("state")
 //            .when(countryIsUs())
-//                .then(notNull("CAN_NOT_BE_NULL"), notEmpty("CAN_NOT_BE_EMPTY"))
+//                .then(notNull("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
 //            .minLenght(1)
 //            .maxLength(6)
 //
@@ -55,7 +55,7 @@ public class Main {
 //            };
 //        }
 //
-//        static OnValidly notEmpty(String field) {
+//        static OnValidly notEmptyString(String field) {
 //            return new OnValidly() {
 //
 //            };
