@@ -1,49 +1,49 @@
 package com.validly;
 
 
+import com.validly.validator.ValidlyNote;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
-import static com.validly.Validly.*;
+import static com.validly.validator.FieldValidator.field;
+import static com.validly.validator.ValidationPredicate.maxValue;
+import static com.validly.validator.ValidationPredicate.notEmpty;
 import static org.junit.Assert.assertEquals;
 
 public class ValidlyTest {
 
     @Test
-    public void notNull_shouldPutToNote_whenValueIsNull() throws Exception {
-        Pojo pojo = new Pojo(null, "arvo22");
+    public void testOnGoingCondition() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("");
+        customer.setLastName("thisIsTooLongValue");
+        customer.setAge(100000);
         MyNote note = new MyNote();
 
-        field(pojo.getField1(), note)
-                .notNull("MUST_NOT_BE_NULL")
-                .notEmptyString("MUST_NOT_BE_NULL");
+        field("firstName", customer.getFirstName(), note)
+                .when(notNull())
+                    .thenCheck(notEmpty("CANT_BE_EMPTY"));
 
-        assertEquals(1, note.messages.size());
+        field("lastName", customer.getLastName(), note)
+                .checkNotNull("CANT_BE_NULL")
+                .checkMaxLength(5, "TOO_LONG");
+
+        field("age", customer.getAge(), note)
+                .checkNotNull("CANT_BE_NULL")
+                .when(customer.getFirstName().isEmpty())
+                    .thenCheck(maxValue(10, "TOO_BIG_NUMBER"));
+
+        assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
+        assertEquals("TOO_LONG", note.messages.get("lastName"));
+        assertEquals("TOO_BIG_NUMBER", note.messages.get("age"));
+
     }
 
-    @Test
-    public void inferInteger() throws Exception {
-        Pojo pojo = new Pojo();
-        pojo.setIntegerField(null);
-        MyNote note = new MyNote();
-
-        field(pojo.getIntegerField(), note)
-                .notNull("MUST_NOT_BE_NULL");
-        assertEquals(1, note.messages.size());
-    }
-
-    @Test(expected = ClassCastException.class)
-    public void notEmptyString_shouldThrowException_whenFieldNotString() throws Exception {
-        Pojo pojo = new Pojo();
-        pojo.setIntegerField(123);
-        MyNote note = new MyNote();
-
-        field(pojo.getIntegerField(), note)
-                .notEmptyString("MUST_NOT_BE_NULL");
+    private Predicate<String> notNull() {
+        return s -> s != null;
     }
 
     class MyNote implements ValidlyNote {
@@ -51,41 +51,42 @@ public class ValidlyTest {
         Map<String, String> messages = new HashMap<>();
 
         @Override
-        public void put(String fieldName, String message) {
+        public void add(String fieldName, String message) {
             messages.put(fieldName, message);
         }
+
+
     }
 
 
+    class Customer {
 
-    class Pojo {
-        private String field1;
-        private String field2;
-        private Integer integerField;
+        private String firstName;
+        private String lastName;
+        private Integer age;
 
-        public Pojo(String field1, String field2) {
-            this.field1 = field1;
-            this.field2 = field2;
+        public String getFirstName() {
+            return firstName;
         }
 
-        public Pojo() {
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
         }
 
-        public String getField1() {
-            return field1;
+        public String getLastName() {
+            return lastName;
         }
 
-        public String getField2() {
-            return field2;
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
         }
 
-        public Integer getIntegerField() {
-            return integerField;
+        public Integer getAge() {
+            return age;
         }
 
-
-        public void setIntegerField(Integer integerField) {
-            this.integerField = integerField;
+        public void setAge(Integer age) {
+            this.age = age;
         }
     }
 
