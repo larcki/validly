@@ -15,13 +15,13 @@ public class Main {
 //
 //        field("email")
 //            .when(otherFieldProvided())
-//                .thenCheck(checkNotNull("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
+//                .then(required("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
 //            .minLenght(1)
 //            .checkMaxValue(6);
 //
 //        field("state")
 //            .when(countryIsUs())
-//                .thenCheck(checkNotNull("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
+//                .then(required("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
 //            .minLenght(1)
 //            .checkMaxValue(6)
 //
@@ -49,7 +49,7 @@ public class Main {
 //            };
 //        }
 //
-//        static OnValidly checkNotNull(String field) {
+//        static OnValidly required(String field) {
 //            return new OnValidly() {
 //
 //            };
@@ -69,7 +69,7 @@ public class Main {
 //            return this;
 //        }
 //
-//        default OnValidly checkNotNull() {
+//        default OnValidly required() {
 //            return this;
 //        }
 //
@@ -80,7 +80,7 @@ public class Main {
 //    }
 //
 //    interface OnCondition {
-//        default OnValidly thenCheck(OnValidly... onValidlies) {
+//        default OnValidly then(OnValidly... onValidlies) {
 //            return new OnValidly() {
 //
 //            };

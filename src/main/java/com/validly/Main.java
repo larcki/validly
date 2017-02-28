@@ -10,13 +10,13 @@ public class Main {
 //
 //        field("email")
 //            .when(otherFieldProvided())
-//                .thenCheck(checkNotNull("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
+//                .then(required("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
 //            .minLenght(1)
 //            .checkMaxValue(6);
 //
 //        field("state")
 //            .when(countryIsUs())
-//                .thenCheck(checkNotNull("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
+//                .then(required("CAN_NOT_BE_NULL"), notEmptyString("CAN_NOT_BE_EMPTY"))
 //            .minLenght(1)
 //            .checkMaxValue(6)
 //

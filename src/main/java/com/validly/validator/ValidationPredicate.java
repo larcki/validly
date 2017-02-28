@@ -16,7 +16,7 @@ public class ValidationPredicate<T> implements Predicate<T> {
         return new ValidationPredicate<>(message, ValidationRules.isNotBlank());
     }
 
-    public static ValidationPredicate<String> notEmpty(String message) {
+    public static ValidationPredicate<String> mustNotBeEmpty(String message) {
         return new ValidationPredicate<>(message, ValidationRules.isNotEmpty());
     }
 
