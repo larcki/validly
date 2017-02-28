@@ -12,8 +12,16 @@ public class ValidationPredicate<T> implements Predicate<T> {
         return new ValidationPredicate<>(message, Objects::nonNull);
     }
 
+    public static ValidationPredicate<String> notBlank(String message) {
+        return new ValidationPredicate<>(message, ValidationRules.isNotBlank());
+    }
+
     public static ValidationPredicate<String> notEmpty(String message) {
-        return new ValidationPredicate<>(message, ValidationRules.notEmptyString());
+        return new ValidationPredicate<>(message, ValidationRules.isNotEmpty());
+    }
+
+    public static ValidationPredicate<String> notEmptyTrimmed(String message) {
+        return new ValidationPredicate<>(message, ValidationRules.isNotTrimmedEmpty());
     }
 
     public static ValidationPredicate<Integer> maxValue(int max, String message) {

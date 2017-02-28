@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static com.validly.validator.FieldValidator.field;
 import static com.validly.validator.ValidationPredicate.maxValue;
@@ -24,8 +23,8 @@ public class ValidlyTest {
         MyNote note = new MyNote();
 
         field("firstName", customer.getFirstName(), note)
-                .when(notNull())
-                    .thenCheck(notEmpty("CANT_BE_EMPTY"));
+                .whenNotNull()
+                .thenCheck(notEmpty("CANT_BE_EMPTY"));
 
         field("lastName", customer.getLastName(), note)
                 .checkNotNull("CANT_BE_NULL")
@@ -34,7 +33,7 @@ public class ValidlyTest {
         field("age", customer.getAge(), note)
                 .checkNotNull("CANT_BE_NULL")
                 .when(customer.getFirstName().isEmpty())
-                    .thenCheck(maxValue(10, "TOO_BIG_NUMBER"));
+                .thenCheck(maxValue(10, "TOO_BIG_NUMBER"));
 
         assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
         assertEquals("TOO_LONG", note.messages.get("lastName"));
@@ -42,8 +41,20 @@ public class ValidlyTest {
 
     }
 
-    private Predicate<String> notNull() {
-        return s -> s != null;
+    @Test
+    public void testWhenNotNull() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("");
+        customer.setLastName("thisIsTooLongValue");
+        customer.setAge(100000);
+        MyNote note = new MyNote();
+
+        field("firstName", customer.getFirstName(), note)
+                .whenNotNull()
+                .thenCheck(notEmpty("CANT_BE_EMPTY"));
+
+        assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
+
     }
 
     class MyNote implements ValidlyNote {

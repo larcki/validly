@@ -45,7 +45,11 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new OnGoingWhenCondition<FV>(predicate.test(value));
     }
 
-    public class OnGoingWhenCondition<FV> {
+    public OnGoingWhenCondition whenNotNull() {
+        return new OnGoingWhenCondition<FV>(Objects.nonNull(value));
+    }
+
+    public class OnGoingWhenCondition<WT> {
 
         private boolean condition;
 
@@ -54,12 +58,12 @@ public class FieldValidator<T, FV extends FieldValidator> {
         }
 
         @SafeVarargs
-        public final FV thenCheck(ValidationPredicate<T>... predicates) {
+        public final WT thenCheck(ValidationPredicate<T>... predicates) {
             if (condition) {
                 Arrays.stream(predicates)
                         .forEach(p -> check(p, p.getMessage()));
             }
-            return (FV) FieldValidator.this;
+            return (WT) FieldValidator.this;
         }
 
     }
@@ -70,12 +74,24 @@ public class FieldValidator<T, FV extends FieldValidator> {
             super(fieldName, value, note);
         }
 
+        public StringFieldValidator checkNotBlank(String message) {
+            return check(ValidationRules.isNotEmpty(), message);
+        }
+
         public StringFieldValidator checkNotEmpty(String message) {
-            return check(ValidationRules.notEmptyString(), message);
+            return check(ValidationRules.isNotEmpty(), message);
+        }
+
+        public StringFieldValidator checkNotTrimmedEmpty(String message) {
+            return check(ValidationRules.isNotTrimmedEmpty(), message);
         }
 
         public StringFieldValidator checkMaxLength(int max, String message) {
-            return check(ValidationRules.maxLength(max), message);
+            return check(ValidationRules.isWithinMax(max), message);
+        }
+
+        public StringFieldValidator checkMinLength(int min, String message) {
+            return check(ValidationRules.isWithinMin(min), message);
         }
 
     }
