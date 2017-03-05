@@ -33,9 +33,9 @@ public class FieldValidator2<T, FV extends FieldValidator2> {
             return new Start<>(fieldName, value, note);
         }
 
-        public FieldValidator2<T, FV> isRequired() {
-            FieldValidator2.field(fieldName)
-        }
+//        public FieldValidator2<T, FV> isRequired() {
+//            FieldValidator2.field(fieldName)
+//        }
 
     }
 

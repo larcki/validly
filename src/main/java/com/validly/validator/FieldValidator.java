@@ -1,7 +1,6 @@
 package com.validly.validator;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public class FieldValidator<T, FV extends FieldValidator> {
@@ -10,54 +9,70 @@ public class FieldValidator<T, FV extends FieldValidator> {
     private final T value;
     private final ValidlyNote note;
     private boolean validationFailed;
-    boolean nullIsValid;
+    private boolean nullIsValid;
 
-    private FieldValidator(String fieldName, T value, ValidlyNote note) {
+
+    public void setNullIsValid(boolean nullIsValid) {
+        this.nullIsValid = nullIsValid;
+    }
+
+    FieldValidator(String fieldName, T value, ValidlyNote note) {
         this.fieldName = fieldName;
         this.value = value;
         this.note = note;
     }
 
-    abstract static class BaseStart {
-        FieldValidator fieldValidator;
+//    abstract static class PreCondition {
+//
+//        protected final FieldValidator fieldValidator;
+//
+//        public PreCondition(FieldValidator fieldValidator) {
+//            this.fieldValidator = fieldValidator;
+//        }
+//
+//        protected FieldValidator required(String message) {
+//            this.fieldValidator.nullIsValid = false;
+//            return this.fieldValidator;
+//        }
+//
+//        protected FieldValidator canBeNull() {
+//            this.fieldValidator.nullIsValid = true;
+//            return this.fieldValidator;
+//        }
+//
+//        protected FieldValidator requiredWhen(boolean value, String message) {
+//            this.fieldValidator.nullIsValid = !value;
+//            return this.fieldValidator;
+//        }
+//
+//    }
+//
+//    public final static class StringPreCondition extends PreCondition {
+//
+//        public StringPreCondition(FieldValidator fieldValidator) {
+//            super(fieldValidator);
+//        }
+//
+//        @Override
+//        public StringFieldValidator required(String message) {
+//            return (StringFieldValidator) this.fieldValidator;
+//        }
+//
+//        @Override
+//        public StringFieldValidator requiredWhen(boolean value, String message) {
+//            return (StringFieldValidator) super.requiredWhen(value, message);
+//        }
+//
+//        @Override
+//        public StringFieldValidator canBeNull() {
+//            return (StringFieldValidator) super.canBeNull();
+//        }
+//
+//    }
 
-        public BaseStart(FieldValidator fieldValidator) {
-            this.fieldValidator = fieldValidator;
-        }
-
-        abstract FieldValidator required(String message);
-        abstract FieldValidator requiredWhen(boolean value, String message);
-        abstract FieldValidator canBeNull();
-
-    }
-
-    public static class StringStart extends BaseStart {
-
-        public StringStart(StringFieldValidator fieldValidator) {
-            super(fieldValidator);
-        }
-
-        public StringFieldValidator required(String message) {
-            return (StringFieldValidator) fieldValidator;
-        }
-
-        @Override
-        public StringFieldValidator requiredWhen(boolean value, String message) {
-            fieldValidator.nullIsValid = !value;
-            return null;
-        }
-
-        @Override
-        public StringFieldValidator canBeNull() {
-            fieldValidator.nullIsValid = true;
-            return (StringFieldValidator) fieldValidator;
-        }
-
-    }
-
-    public static StringStart field(String fieldName, String value, ValidlyNote note) {
+    public static StringPreCondition field(String fieldName, String value, ValidlyNote note) {
         StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
-        return new StringStart(stringFieldValidator);
+        return new StringPreCondition(stringFieldValidator);
     }
 
     public static IntegerFieldValidator field(String fieldName, Integer value, ValidlyNote note) {
@@ -103,39 +118,39 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
     }
 
-    public static class StringFieldValidator extends FieldValidator<String, StringFieldValidator> {
-
-        public StringFieldValidator(String fieldName, String value, ValidlyNote note) {
-            super(fieldName, value, note);
-        }
-
-
-        public StringFieldValidator mustNotBeBlank(String message) {
-            return must(ValidationRules.isNotBlank(), message);
-        }
-
-        public StringFieldValidator checkNotEmpty(String message) {
-            return must(ValidationRules.isNotEmpty(), message);
-        }
-
-        public StringFieldValidator checkNotTrimmedEmpty(String message) {
-            return must(ValidationRules.isNotTrimmedEmpty(), message);
-        }
-
-        public StringFieldValidator lengthMustNotExceed(int max, String message) {
-            return must(ValidationRules.isWithinMax(max), message);
-        }
-
-        public StringFieldValidator lengthMustBeAtLeast(int min, String message) {
-            return must(ValidationRules.isWithinMin(min), message);
-        }
-
-        public StringFieldValidator lengthMustBeWithin(int min, int max, String message) {
-            return must(ValidationRules.isWithinMin(min)
-                    .and(ValidationRules.isWithinMax(max)), message);
-        }
-
-    }
+//    public static class StringFieldValidator extends FieldValidator<String, StringFieldValidator> {
+//
+//        public StringFieldValidator(String fieldName, String value, ValidlyNote note) {
+//            super(fieldName, value, note);
+//        }
+//
+//
+//        public StringFieldValidator mustNotBeBlank(String message) {
+//            return must(ValidationRules.isNotBlank(), message);
+//        }
+//
+//        public StringFieldValidator checkNotEmpty(String message) {
+//            return must(ValidationRules.isNotEmpty(), message);
+//        }
+//
+//        public StringFieldValidator checkNotTrimmedEmpty(String message) {
+//            return must(ValidationRules.isNotTrimmedEmpty(), message);
+//        }
+//
+//        public StringFieldValidator lengthMustNotExceed(int max, String message) {
+//            return must(ValidationRules.isWithinMax(max), message);
+//        }
+//
+//        public StringFieldValidator lengthMustBeAtLeast(int min, String message) {
+//            return must(ValidationRules.isWithinMin(min), message);
+//        }
+//
+//        public StringFieldValidator lengthMustBeWithin(int min, int max, String message) {
+//            return must(ValidationRules.isWithinMin(min)
+//                    .and(ValidationRules.isWithinMax(max)), message);
+//        }
+//
+//    }
 
     public static class IntegerFieldValidator extends FieldValidator<Integer, IntegerFieldValidator> {
 
