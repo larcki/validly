@@ -1,24 +1,24 @@
 package com.validly.validator;
 
-class PreCondition {
+class PreCondition<T extends FieldValidator> {
 
     protected final FieldValidator fieldValidator;
 
-    public PreCondition(FieldValidator fieldValidator) {
+     PreCondition(FieldValidator fieldValidator) {
         this.fieldValidator = fieldValidator;
     }
 
-    protected FieldValidator required(String message) {
+     FieldValidator required(String message) {
         this.fieldValidator.setNullIsValid(false);
         return this.fieldValidator;
     }
 
-    protected FieldValidator canBeNull() {
+     FieldValidator canBeNull() {
         this.fieldValidator.setNullIsValid(true);
         return this.fieldValidator;
     }
 
-    protected FieldValidator requiredWhen(boolean value, String message) {
+     FieldValidator requiredWhen(boolean value, String message) {
         this.fieldValidator.setNullIsValid(!value);
         return this.fieldValidator;
     }

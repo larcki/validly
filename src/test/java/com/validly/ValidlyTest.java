@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import static com.validly.validator.FieldValidator.field;
-import static com.validly.validator.ValidationPredicate.maxValue;
 import static com.validly.validator.ValidationPredicate.mustNotBeEmpty;
 import static org.junit.Assert.assertEquals;
 
@@ -29,7 +28,8 @@ public class ValidlyTest {
                     .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("lastName", customer.getLastName(), note)
-                .required("CANT_BE_NULL")
+                .required("Value must be provided")
+                .mustNotBeBlank("Value can not be blank")
                 .lengthMustNotExceed(5, "TOO_LONG")
                 .lengthMustBeAtLeast(2, "TOO_LONG")
                 .lengthMustBeWithin(2, 10, "TOO_LONG");

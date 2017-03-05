@@ -8,7 +8,7 @@ public final class StringPreCondition extends PreCondition {
 
     @Override
     public StringFieldValidator required(String message) {
-        return (StringFieldValidator) this.fieldValidator;
+        return (StringFieldValidator) super.required(message);
     }
 
     @Override
