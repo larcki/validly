@@ -10,12 +10,8 @@ public final class StringFieldValidator extends FieldValidator<String, StringFie
         return must(ValidationRules.isNotBlank(), message);
     }
 
-    public StringFieldValidator checkNotEmpty(String message) {
+    public StringFieldValidator mustNotBeEmpty(String message) {
         return must(ValidationRules.isNotEmpty(), message);
-    }
-
-    public StringFieldValidator checkNotTrimmedEmpty(String message) {
-        return must(ValidationRules.isNotTrimmedEmpty(), message);
     }
 
     public StringFieldValidator lengthMustNotExceed(int max, String message) {

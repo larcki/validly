@@ -11,4 +11,8 @@ public class HashMapValidlyNote implements ValidlyNote {
     public void add(String fieldName, String message) {
         validationNotes.put(fieldName, message);
     }
+
+    public Map<String, String> getValidationNotes() {
+        return validationNotes;
+    }
 }

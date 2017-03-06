@@ -32,7 +32,7 @@ class ValidationRules {
     }
 
     private static boolean isEmptyString(String v) {
-        return nonNull(v) && !v.isEmpty();
+        return nonNull(v) && v.isEmpty();
     }
 
     private static boolean isTrimmedEmptyString(String v) {
