@@ -28,7 +28,7 @@ public class ValidlyTest {
                     .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("lastName", customer.getLastName(), note)
-                .required("Value must be provided")
+                .mustNotBeNull("Value must be provided")
                 .mustNotBeBlank("Value can not be blank")
                 .lengthMustNotExceed(5, "TOO_LONG")
                 .lengthMustBeAtLeast(2, "TOO_LONG")
@@ -58,11 +58,11 @@ public class ValidlyTest {
 //                .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("firstName", customer.getFirstName(), note)
-                .required("Can not be null")
+                .mustNotBeNull("Can not be null")
                 .mustNotBeBlank("can not be null");
 
         field("firstName", customer.getFirstName(), note)
-                .requiredWhen(true, "can not be null")
+                .mustNotBeNullWhen(true, "can not be null")
                 .mustNotBeBlank("can not be null");
 
         field("firstName", customer.getFirstName(), note)
@@ -78,23 +78,23 @@ public class ValidlyTest {
                 .lengthMustBeWithin(10, 100, "Not within range");
 
         field("firstName", customer.getFirstName(), note)
-                .required("Is required")
+                .mustNotBeNull("Is mustNotBeNull")
                 .must(s -> s.contains("s"), "Must contain letter S");
 
 
         field("firstName", customer.getFirstName(), note)
-                .required("Is required")
+                .mustNotBeNull("Is mustNotBeNull")
                 .when(customer.getAge() > 18)
                     .then(mustNotBeEmpty("can not be empty if S is defined"));
 
         field("firstName", customer.getFirstName(), note)
-                .requiredWhen(customer.getAge() > 18, "Name needed for adults")
+                .mustNotBeNullWhen(customer.getAge() > 18, "Name needed for adults")
                 .lengthMustBeAtLeast(1, "is too short")
                 .lengthMustNotExceed(20, "is too long");
 
 
 //        field("firstName", customer.getFirstName(), note)
-//                .required("Can not be null")
+//                .mustNotBeNull("Can not be null")
 //                .mustNotBeBlank("Can not be blank value")
 //                .shouldNotContain()
 //                .lengthShouldBeWithin(

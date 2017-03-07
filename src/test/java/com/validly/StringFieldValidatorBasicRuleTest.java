@@ -15,7 +15,13 @@ import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class StringBasicValidationTest {
+public class StringFieldValidatorBasicRuleTest {
+
+    private static final String NOT_NULL_FAIL = "mustNotBeNull failed";
+    private static final String NOT_EMPTY_FAIL = "must not be empty failed";
+    private static final String NOT_BLANK_FAIL = "must not be blank failed";
+    private static final String LENGTH_MIN_FAIL = "length must be at least failed";
+    private static final String LENGTH_MAX_FAIL = "length must not exceed failed";
 
     @Parameter(0)
     public String fieldValue;
@@ -29,25 +35,25 @@ public class StringBasicValidationTest {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {null, "required failed", true},
-                {"", "must not be empty failed", true},
-                {"     ", "must not be blank failed", true},
-                {"a", "length must be at least failed", true},
-                {"more than twenty characters", "length must not exceed failed", true},
+                {null, NOT_NULL_FAIL, true},
+                {"", NOT_EMPTY_FAIL, true},
+                {"     ", NOT_BLANK_FAIL, true},
+                {"a", LENGTH_MIN_FAIL, true},
+                {"more than twenty characters", LENGTH_MAX_FAIL, true},
                 {"valid", "", false}
         });
     }
 
     @Test
-    public void basicStringValidation() throws Exception {
+    public void stringFieldValidation() throws Exception {
         HashMapValidlyNote note = new HashMapValidlyNote();
 
         field("fieldName", fieldValue, note)
-                .required("required failed")
-                .mustNotBeEmpty("must not be empty failed")
-                .mustNotBeBlank("must not be blank failed")
-                .lengthMustBeAtLeast(2, "length must be at least failed")
-                .lengthMustNotExceed(20, "length must not exceed failed");
+                .mustNotBeNull(NOT_NULL_FAIL)
+                .mustNotBeEmpty(NOT_EMPTY_FAIL)
+                .mustNotBeBlank(NOT_BLANK_FAIL)
+                .lengthMustBeAtLeast(2, LENGTH_MIN_FAIL)
+                .lengthMustNotExceed(20, LENGTH_MAX_FAIL);
 
         if (expectFailure) {
             assertEquals(expectedError, note.getValidationNotes().get("fieldName"));
@@ -55,8 +61,6 @@ public class StringBasicValidationTest {
             assertTrue(note.getValidationNotes().isEmpty());
         }
 
-//        field("age", customer.getAge(), note)
-//                .req
     }
 
 }

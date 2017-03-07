@@ -8,11 +8,12 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static com.validly.validator.FieldValidator.field;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class StringConditionalValidationTest {
+public class StringFieldValidatorConditionalRuleTest {
 
     @Parameterized.Parameter(0)
     public String fieldValue;
@@ -34,15 +35,15 @@ public class StringConditionalValidationTest {
     public void basicStringValidation() throws Exception {
         HashMapValidlyNote note = new HashMapValidlyNote();
 
-//TODO test requiredWhen or when-then conditionals here?
+        //TODO Scenario test for rule with conditionals
 
 
-//        field("fieldName", fieldValue, note)
-//                .requiredWhen(customer.getAge() >= 18, "Is required for adults")
-//                .mustNotBeBlank("Can not be empty")
-//                .when(s -> s.startsWith("Ö"))
-//                .then()
-//                .lengthMustBeWithin(1, 50, "Must be 1 to 50 characters long");
+        field("fieldName", fieldValue, note)
+                .mustNotBeNull("mustNotBeNull failed")
+                .mustNotBeBlank("Can not be empty")
+                .when(s -> s.startsWith("Ö"))
+                .then()
+                .lengthMustBeWithin(1, 50, "Must be 1 to 50 characters long");
 
         if (expectFailure) {
             assertEquals(expectedError, note.getValidationNotes().get("firstName"));
