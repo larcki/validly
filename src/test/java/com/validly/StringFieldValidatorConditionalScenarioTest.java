@@ -13,7 +13,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class StringFieldValidatorConditionalRuleTest {
+public class StringFieldValidatorConditionalScenarioTest {
 
     @Parameterized.Parameter(0)
     public String fieldValue;

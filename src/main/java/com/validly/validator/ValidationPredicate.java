@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 public class ValidationPredicate<T> implements Predicate<T> {
 
-    //TODO could be abstract so that can be extend in the usage
+    //TODO could be abstract so that can be extend in the usage. Rationale is to have this customizable by clients
 
     protected final String message;
     protected final Predicate<T> predicate;

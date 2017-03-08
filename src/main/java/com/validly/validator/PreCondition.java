@@ -22,8 +22,14 @@ class PreCondition<T extends FieldValidator> {
         return this.fieldValidator;
     }
 
-    FieldValidator mustNotBeNullWhen(boolean value, String message) {
-        this.fieldValidator.setNullIsValid(!value);
+    @SuppressWarnings("unchecked")
+    FieldValidator mustNotBeNullWhen(boolean mustNotBeNull, String message) {
+        if (mustNotBeNull) {
+            this.fieldValidator.setNullIsValid(false);
+            this.fieldValidator.must(Objects::nonNull, message);
+        } else {
+            this.fieldValidator.setNullIsValid(true);
+        }
         return this.fieldValidator;
     }
 

@@ -15,7 +15,7 @@ import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class StringFieldValidatorBasicRuleTest {
+public class StringFieldValidatorBasicScenarioTest {
 
     private static final String NOT_NULL_FAIL = "mustNotBeNull failed";
     private static final String NOT_EMPTY_FAIL = "must not be empty failed";

@@ -13,22 +13,6 @@ import static org.junit.Assert.assertTrue;
 public class StringFieldValidatorTest {
 
     @Test
-    public void canBeNull() {
-        assertTrue(assertCanBeNullValid(null));
-        assertTrue(assertCanBeNullValid(""));
-        assertTrue(assertCanBeNullValid("  "));
-        assertTrue(assertCanBeNullValid("value"));
-    }
-
-    @Test
-    public void mustNotBeNull() {
-        assertFalse(assertMustNotBeNullValid(null));
-        assertTrue(assertMustNotBeNullValid(""));
-        assertTrue(assertMustNotBeNullValid("   "));
-        assertTrue(assertMustNotBeNullValid("value"));
-    }
-
-    @Test
     public void lengthMustNotExceed() {
         assertTrue(LengthMustNotExceedValid(5, ""));
         assertTrue(LengthMustNotExceedValid(5, " "));
@@ -79,16 +63,6 @@ public class StringFieldValidatorTest {
         return isValid(note -> field("", value, note)
                 .mustNotBeNull("")
                 .lengthMustBeAtLeast(limit, ""));
-    }
-
-    private boolean assertMustNotBeNullValid(String value) {
-        return isValid(note -> field("", value, note)
-                .mustNotBeNull(""));
-    }
-
-    private boolean assertCanBeNullValid(String value) {
-        return isValid(note -> field("", value, note)
-                .canBeNull());
     }
 
     private boolean isValid(Consumer<ValidlyNote> validationMethod) {
