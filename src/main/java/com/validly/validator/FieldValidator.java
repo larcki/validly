@@ -62,12 +62,13 @@ public class FieldValidator<T, FV extends FieldValidator> {
         public final FV then(ValidationPredicate<T>... predicates) {
             if (condition) {
                 Arrays.stream(predicates)
-                        .forEach(p -> must(p, p.getMessage()));
+                        .forEach(p -> must(p.getPredicate(), p.getMessage()));
             }
             return (FV) FieldValidator.this;
         }
 
     }
+
 
 }
 

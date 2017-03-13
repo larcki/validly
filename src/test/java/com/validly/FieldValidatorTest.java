@@ -76,6 +76,15 @@ public class FieldValidatorTest {
                 .then(ValidationPredicate.notBlank(""))));
     }
 
+    @Test
+    public void when_shouldEvaluateBothThenBlocks_whenConditionTrue() throws Exception {
+        assertFalse(isValid(note -> field("", "not blank", note)
+                .canBeNull()
+                .when(true)
+                .then(ValidationPredicate.notBlank(""),
+                        ValidationPredicate.must(s -> s.startsWith("a"), ""))));
+    }
+
     private boolean assertMustNotBeNullValid(String value) {
         return isValid(note -> field("", value, note)
                 .mustNotBeNull(""));

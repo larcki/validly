@@ -34,14 +34,13 @@ public class StringFieldValidatorBasicScenarioTest {
 
     @Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {null, NOT_NULL_FAIL, true},
-                {"", NOT_EMPTY_FAIL, true},
-                {"     ", NOT_BLANK_FAIL, true},
-                {"a", LENGTH_MIN_FAIL, true},
-                {"more than twenty characters", LENGTH_MAX_FAIL, true},
-                {"valid", "", false}
-        });
+        return Arrays.asList(
+                validationFailure(null, NOT_NULL_FAIL),
+                validationFailure("", NOT_EMPTY_FAIL),
+                validationFailure("     ", NOT_BLANK_FAIL),
+                validationFailure("a", LENGTH_MIN_FAIL),
+                validationFailure("more than twenty characters", LENGTH_MAX_FAIL),
+                validationSuccess("valid"));
     }
 
     @Test
@@ -61,6 +60,14 @@ public class StringFieldValidatorBasicScenarioTest {
             assertTrue(note.getValidationNotes().isEmpty());
         }
 
+    }
+
+    private static Object[] validationFailure(Object value, String expectedMessage) {
+        return new Object[]{value, expectedMessage, true};
+    }
+
+    private static Object[] validationSuccess(Object value) {
+        return new Object[]{value, "", false};
     }
 
 }
