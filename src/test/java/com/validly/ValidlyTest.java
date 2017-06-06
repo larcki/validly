@@ -1,7 +1,8 @@
 package com.validly;
 
 
-import com.validly.validator.ValidlyNote;
+import com.validly.validator.Conditions;
+import com.validly.validator.ValidationErrorException;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -14,13 +15,42 @@ import static org.junit.Assert.assertEquals;
 
 public class ValidlyTest {
 
+    @Test(expected = ValidationErrorException.class)
+    public void testNoNotification() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName(null);
+        customer.setLastName("thisIsTooLongValue");
+        customer.setAge(100000);
+
+        try {
+
+            field(customer.getFirstName())
+                    .canBeNull()
+                    .mustNotBeEmpty()
+                    .lengthMustNotExceed(5)
+                    .lengthMustBeAtLeast(2)
+                    .lengthMustBeWithin(2, 10);
+
+            field(customer.getLastName())
+                    .mustNotBeNull()
+                    .mustNotBeBlank()
+                    .lengthMustNotExceed(5)
+                    .lengthMustBeAtLeast(2)
+                    .lengthMustBeWithin(2, 10);
+
+        } catch (ValidationErrorException e) {
+            System.out.println("Invalid input, " + e.getMessage());
+            throw e;
+        }
+    }
+
     @Test
     public void testOnGoingCondition() throws Exception {
         Customer customer = new Customer();
         customer.setFirstName("");
         customer.setLastName("thisIsTooLongValue");
         customer.setAge(100000);
-        MyNote note = new MyNote();
+        Map note = new HashMap<>();
 
         field("firstName", customer.getFirstName(), note)
                 .canBeNull()
@@ -28,20 +58,34 @@ public class ValidlyTest {
                     .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("lastName", customer.getLastName(), note)
-                .mustNotBeNull("Value must be provided")
-                .mustNotBeBlank("Value can not be blank")
-                .lengthMustNotExceed(5, "TOO_LONG")
-                .lengthMustBeAtLeast(2, "TOO_LONG")
-                .lengthMustBeWithin(2, 10, "TOO_LONG");
+                .mustNotBeNull()
+                .mustNotBeBlank()
+                .lengthMustNotExceed(5)
+                .lengthMustBeAtLeast(2)
+                .lengthMustBeWithin(2, 10);
+
+
+        field("lastName", customer.getLastName(), note)
+                .mustNotBeNull()
+                .mustNotBeBlank()
+                .lengthMustNotExceed(5)
+                .lengthMustBeAtLeast(2)
+                .lengthMustBeWithin(2, 10);
 
 //        field("age", customer.getAge(), note)
 //                .isRequired("CANT_BE_NULL")
 //                .when(customer.getFirstName().isEmpty())
 //                .then(maxValue(10, "TOO_BIG_NUMBER"));
 
-        assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
-        assertEquals("TOO_LONG", note.messages.get("lastName"));
-        assertEquals("TOO_BIG_NUMBER", note.messages.get("age"));
+//        assertEquals("CANT_BE_EMPTY", note.get("firstName"));
+//        assertEquals("TOO_LONG", note.get("lastName"));
+//        assertEquals("TOO_BIG_NUMBER", note.get("age"));
+
+        note.forEach((o, o2) -> {
+            System.out.println(o + " : " + o2);
+
+        });
+
 
     }
 
@@ -51,46 +95,47 @@ public class ValidlyTest {
         customer.setFirstName("");
         customer.setLastName("thisIsTooLongValue");
         customer.setAge(100000);
-        MyNote note = new MyNote();
+        Map note = new HashMap<>();
 
 //        field("firstName", customer.getFirstName(), note)
 //                .whenNotNull()
 //                .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("firstName", customer.getFirstName(), note)
-                .mustNotBeNull("Can not be null")
-                .mustNotBeBlank("can not be null");
+                .mustNotBeNull()
+                .mustNotBeBlank();
 
         field("firstName", customer.getFirstName(), note)
-                .mustNotBeNullWhen(true, "can not be null")
-                .mustNotBeBlank("can not be null");
+                .mustNotBeNullWhen(true)
+                .mustNotBeBlank();
 
         field("firstName", customer.getFirstName(), note)
                 .canBeNull()
-                .mustNotBeBlank("can not be null")
-                .lengthMustNotExceed(10, "is too long");
+                .must(contain("s"), "CustomMessage")
+                .mustNotBeBlank()
+                .lengthMustNotExceed(10);
 
         field("firstName", customer.getFirstName(), note)
                 .canBeNull()
                 .must(contain("s"), "Must contain letter S")
                 .when(contain("a"))
                     .then(mustNotBeEmpty(""))
-                .lengthMustBeWithin(10, 100, "Not within range");
+                .lengthMustBeWithin(10, 100);
 
         field("firstName", customer.getFirstName(), note)
-                .mustNotBeNull("Is mustNotBeNull")
+                .mustNotBeNull()
                 .must(s -> s.contains("s"), "Must contain letter S");
 
 
         field("firstName", customer.getFirstName(), note)
-                .mustNotBeNull("Is mustNotBeNull")
+                .mustNotBeNull()
                 .when(customer.getAge() > 18)
                     .then(mustNotBeEmpty("can not be empty if S is defined"));
 
         field("firstName", customer.getFirstName(), note)
-                .mustNotBeNullWhen(customer.getAge() > 18, "Name needed for adults")
-                .lengthMustBeAtLeast(1, "is too short")
-                .lengthMustNotExceed(20, "is too long");
+                .mustNotBeNullWhen(customer.getAge() > 18)
+                .lengthMustBeAtLeast(1)
+                .lengthMustNotExceed(20);
 
 
 //        field("firstName", customer.getFirstName(), note)
@@ -100,24 +145,12 @@ public class ValidlyTest {
 //                .lengthShouldBeWithin(
 
 
-        assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
+        assertEquals("CANT_BE_EMPTY", note.get("firstName"));
 
     }
 
     private Predicate<String> contain(String letter) {
         return s -> s.contains(letter);
-    }
-
-    class MyNote implements ValidlyNote {
-
-        Map<String, String> messages = new HashMap<>();
-
-        @Override
-        public void add(String fieldName, String message) {
-            messages.put(fieldName, message);
-        }
-
-
     }
 
 }

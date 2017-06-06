@@ -1,37 +1,55 @@
 package com.validly.validator;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class FieldValidator<T, FV extends FieldValidator> {
 
     private final String fieldName;
     private final T value;
-    private final ValidlyNote note;
+    private final Map<Object, Object> note;
     private boolean validationFailed;
     private boolean nullIsValid;
 
-    protected FieldValidator(String fieldName, T value, ValidlyNote note) {
+    protected FieldValidator(String fieldName, T value, Map<Object, Object> note) {
         this.fieldName = fieldName;
         this.value = value;
         this.note = note;
     }
 
-    public static StringPreCondition field(String fieldName, String value, ValidlyNote note) {
+    protected FieldValidator(T value) {
+        this(null, value, null);
+    }
+
+    public static StringPreCondition field(String fieldName, String value, Map note) {
         StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
         return new StringPreCondition(stringFieldValidator);
     }
 
-    public static IntegerFieldValidator field(String fieldName, Integer value, ValidlyNote note) {
+    public static StringPreCondition field(String value) {
+        StringFieldValidator stringFieldValidator = new StringFieldValidator(value);
+        return new StringPreCondition(stringFieldValidator);
+    }
+
+    public static IntegerFieldValidator field(String fieldName, Integer value, Map note) {
         return new IntegerFieldValidator(fieldName, value, note);
     }
 
-    public FV must(Predicate<T> predicate, String message) {
+    public FV must(Predicate<T> predicate, String identifier) {
         if (!validationFailed && !valueIsNullAndItsValid() && !predicate.test(value)) {
-            note.add(fieldName, message);
+            if (note != null) {
+                note.put(fieldName, identifier);
+            } else {
+                throw new ValidationErrorException("Validation failure: " + identifier);
+            }
             validationFailed = true;
         }
         return (FV) this;
+    }
+
+    public FV must(Predicate<T> predicate) {
+            return must(predicate, Conditions.unknown);
     }
 
     void setNullIsValid(boolean nullIsValid) {

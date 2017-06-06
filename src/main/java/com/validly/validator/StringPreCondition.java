@@ -7,13 +7,13 @@ public final class StringPreCondition extends PreCondition {
     }
 
     @Override
-    public StringFieldValidator mustNotBeNull(String message) {
-        return (StringFieldValidator) super.mustNotBeNull(message);
+    public StringFieldValidator mustNotBeNull() {
+        return (StringFieldValidator) super.mustNotBeNull();
     }
 
     @Override
-    public StringFieldValidator mustNotBeNullWhen(boolean value, String message) {
-        return (StringFieldValidator) super.mustNotBeNullWhen(value, message);
+    public StringFieldValidator mustNotBeNullWhen(boolean value) {
+        return (StringFieldValidator) super.mustNotBeNullWhen(value);
     }
 
     @Override

@@ -5,6 +5,9 @@ import java.util.function.Predicate;
 
 public class ValidationPredicate<T> {
 
+    //TODO what to do with these
+
+
     protected final String message;
     protected final Predicate<T> predicate;
 
