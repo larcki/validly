@@ -1,7 +1,6 @@
 package com.validly;
 
 
-import com.validly.validator.Conditions;
 import com.validly.validator.ValidationErrorException;
 import org.junit.Test;
 
@@ -21,11 +20,12 @@ public class ValidlyTest {
         customer.setFirstName(null);
         customer.setLastName("thisIsTooLongValue");
         customer.setAge(100000);
+        customer.setSsn("21390rjeiwf");
 
         try {
 
             field(customer.getFirstName())
-                    .canBeNull()
+                    .validateWhenNotNull()
                     .mustNotBeEmpty()
                     .lengthMustNotExceed(5)
                     .lengthMustBeAtLeast(2)
@@ -37,6 +37,28 @@ public class ValidlyTest {
                     .lengthMustNotExceed(5)
                     .lengthMustBeAtLeast(2)
                     .lengthMustBeWithin(2, 10);
+
+            field(customer.getSsn())
+                    .validateWhen(customer.getAge() >= 18)
+                    .mustNotBeNull()
+                    .mustNotBeBlank()
+                    .must(s -> !s.startsWith("123123"));
+
+            field(customer.getSsn())
+                    .validateWhen(customer.getAge() >= 18)
+                    .mustNotBeNull()
+                    .mustNotBeBlank()
+                    .must(s -> !s.startsWith("123123"));
+
+
+            if (customer.getAge() > 18) {
+                String ssn = customer.getSsn();
+                if (ssn == null || ssn.trim().equals("") || !ssn.startsWith("123123")) {
+                    throw new IllegalArgumentException();
+                }
+            }
+
+
 
         } catch (ValidationErrorException e) {
             System.out.println("Invalid input, " + e.getMessage());
@@ -53,7 +75,7 @@ public class ValidlyTest {
         Map note = new HashMap<>();
 
         field("firstName", customer.getFirstName(), note)
-                .canBeNull()
+                .validateWhenNotNull()
                 .when(true)
                     .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
@@ -98,7 +120,7 @@ public class ValidlyTest {
         Map note = new HashMap<>();
 
 //        field("firstName", customer.getFirstName(), note)
-//                .whenNotNull()
+//                .validateWhenNotNull()
 //                .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("firstName", customer.getFirstName(), note)
@@ -110,13 +132,13 @@ public class ValidlyTest {
                 .mustNotBeBlank();
 
         field("firstName", customer.getFirstName(), note)
-                .canBeNull()
+                .validateWhenNotNull()
                 .must(contain("s"), "CustomMessage")
                 .mustNotBeBlank()
                 .lengthMustNotExceed(10);
 
         field("firstName", customer.getFirstName(), note)
-                .canBeNull()
+                .validateWhenNotNull()
                 .must(contain("s"), "Must contain letter S")
                 .when(contain("a"))
                     .then(mustNotBeEmpty(""))

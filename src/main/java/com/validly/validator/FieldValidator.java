@@ -11,6 +11,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
     private final Map<Object, Object> note;
     private boolean validationFailed;
     private boolean nullIsValid;
+    private boolean ignore;
 
     protected FieldValidator(String fieldName, T value, Map<Object, Object> note) {
         this.fieldName = fieldName;
@@ -37,7 +38,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
     }
 
     public FV must(Predicate<T> predicate, String identifier) {
-        if (!validationFailed && !valueIsNullAndItsValid() && !predicate.test(value)) {
+        if (!ignore && !validationFailed && !valueIsNullAndItsValid() && !predicate.test(value)) {
             if (note != null) {
                 note.put(fieldName, identifier);
             } else {
@@ -54,6 +55,10 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
     void setNullIsValid(boolean nullIsValid) {
         this.nullIsValid = nullIsValid;
+    }
+
+    void setIgnore(boolean ignore) {
+        this.ignore = ignore;
     }
 
     private boolean valueIsNullAndItsValid() {

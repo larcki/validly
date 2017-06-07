@@ -9,6 +9,7 @@ public class Customer {
     private Integer age;
     private List<String> merits;
     private Address address;
+    private String ssn;
 
     public String getFirstName() {
         return firstName;
@@ -48,6 +49,14 @@ public class Customer {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
     }
 }
 

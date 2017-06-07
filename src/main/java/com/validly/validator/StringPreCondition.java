@@ -17,8 +17,12 @@ public final class StringPreCondition extends PreCondition {
     }
 
     @Override
-    public StringFieldValidator canBeNull() {
-        return (StringFieldValidator) super.canBeNull();
+    public StringFieldValidator validateWhenNotNull() {
+        return (StringFieldValidator) super.validateWhenNotNull();
     }
 
+    @Override
+    public StringPreCondition validateWhen(boolean validate) {
+        return (StringPreCondition) super.validateWhen(validate);
+    }
 }
