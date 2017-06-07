@@ -1,9 +1,15 @@
 package com.validly.validator;
 
-public final class StringPreCondition extends PreCondition {
+public final class StringPreCondition extends PreCondition<String, StringFieldValidator> {
 
-    public StringPreCondition(FieldValidator fieldValidator) {
+    public StringPreCondition(FieldValidator<String, StringFieldValidator> fieldValidator) {
         super(fieldValidator);
+    }
+
+    public StringFieldValidator mustNotBeBlank() {
+        this.fieldValidator.setNullIsValid(false);
+        this.fieldValidator.must(ValidationRules.isNotBlank(), Conditions.mustNotBeBlank);
+        return (StringFieldValidator) this.fieldValidator;
     }
 
     @Override

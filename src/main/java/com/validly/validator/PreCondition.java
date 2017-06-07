@@ -2,15 +2,14 @@ package com.validly.validator;
 
 import java.util.Objects;
 
-class PreCondition<T extends FieldValidator> {
+class PreCondition<T, FV extends FieldValidator> {
 
-    protected final FieldValidator fieldValidator;
+    protected final FieldValidator<T, FV> fieldValidator;
 
-    PreCondition(FieldValidator fieldValidator) {
+    PreCondition(FieldValidator<T, FV> fieldValidator) {
         this.fieldValidator = fieldValidator;
     }
 
-    @SuppressWarnings("unchecked")
     FieldValidator mustNotBeNull() {
         this.fieldValidator.setNullIsValid(false);
         this.fieldValidator.must(Objects::nonNull, Conditions.mustNotBeNull);
@@ -22,7 +21,6 @@ class PreCondition<T extends FieldValidator> {
         return this.fieldValidator;
     }
 
-    @SuppressWarnings("unchecked")
     FieldValidator mustNotBeNullWhen(boolean mustNotBeNull) {
         if (mustNotBeNull) {
             return mustNotBeNull();

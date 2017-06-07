@@ -21,8 +21,15 @@ public class ValidlyTest {
         customer.setLastName("thisIsTooLongValue");
         customer.setAge(100000);
         customer.setSsn("21390rjeiwf");
+        Address address = new Address();
+        address.setStreet("Street 123");
+        customer.setAddress(address);
 
         try {
+
+//            field(customer.getAddress(), Address.class)
+//                    .field(a -> validate("address", a.getStreet(), note))
+//                    .mustNotBeNull()
 
             field(customer.getFirstName())
                     .validateWhenNotNull()
@@ -32,21 +39,11 @@ public class ValidlyTest {
                     .lengthMustBeWithin(2, 10);
 
             field(customer.getLastName())
-                    .mustNotBeNull()
                     .mustNotBeBlank()
-                    .lengthMustNotExceed(5)
-                    .lengthMustBeAtLeast(2)
                     .lengthMustBeWithin(2, 10);
 
             field(customer.getSsn())
                     .validateWhen(customer.getAge() >= 18)
-                    .mustNotBeNull()
-                    .mustNotBeBlank()
-                    .must(s -> !s.startsWith("123123"));
-
-            field(customer.getSsn())
-                    .validateWhen(customer.getAge() >= 18)
-                    .mustNotBeNull()
                     .mustNotBeBlank()
                     .must(s -> !s.startsWith("123123"));
 
@@ -57,7 +54,6 @@ public class ValidlyTest {
                     throw new IllegalArgumentException();
                 }
             }
-
 
 
         } catch (ValidationErrorException e) {
@@ -77,7 +73,7 @@ public class ValidlyTest {
         field("firstName", customer.getFirstName(), note)
                 .validateWhenNotNull()
                 .when(true)
-                    .then(mustNotBeEmpty("CANT_BE_EMPTY"));
+                .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("lastName", customer.getLastName(), note)
                 .mustNotBeNull()
@@ -141,7 +137,7 @@ public class ValidlyTest {
                 .validateWhenNotNull()
                 .must(contain("s"), "Must contain letter S")
                 .when(contain("a"))
-                    .then(mustNotBeEmpty(""))
+                .then(mustNotBeEmpty(""))
                 .lengthMustBeWithin(10, 100);
 
         field("firstName", customer.getFirstName(), note)
@@ -152,7 +148,7 @@ public class ValidlyTest {
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeNull()
                 .when(customer.getAge() > 18)
-                    .then(mustNotBeEmpty("can not be empty if S is defined"));
+                .then(mustNotBeEmpty("can not be empty if S is defined"));
 
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeNullWhen(customer.getAge() > 18)
