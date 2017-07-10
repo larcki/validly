@@ -41,7 +41,6 @@ public class ValidlyTest {
 
         assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
         assertEquals("TOO_LONG", note.messages.get("lastName"));
-        assertEquals("TOO_BIG_NUMBER", note.messages.get("age"));
 
     }
 
@@ -100,7 +99,7 @@ public class ValidlyTest {
 //                .lengthShouldBeWithin(
 
 
-        assertEquals("CANT_BE_EMPTY", note.messages.get("firstName"));
+        assertEquals("is too short", note.messages.get("firstName"));
 
     }
 
