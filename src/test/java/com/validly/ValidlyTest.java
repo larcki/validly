@@ -32,7 +32,7 @@ public class ValidlyTest {
 //                    .mustNotBeNull()
 
             field(customer.getFirstName())
-                    .validateWhenNotNull()
+                    .nullIsValid()
                     .mustNotBeEmpty()
                     .lengthMustNotExceed(5)
                     .lengthMustBeAtLeast(2)
@@ -71,7 +71,7 @@ public class ValidlyTest {
         Map note = new HashMap<>();
 
         field("firstName", customer.getFirstName(), note)
-                .validateWhenNotNull()
+                .nullIsValid()
                 .when(true)
                 .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
@@ -116,7 +116,7 @@ public class ValidlyTest {
         Map note = new HashMap<>();
 
 //        field("firstName", customer.getFirstName(), note)
-//                .validateWhenNotNull()
+//                .nullIsValid()
 //                .then(mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("firstName", customer.getFirstName(), note)
@@ -128,13 +128,13 @@ public class ValidlyTest {
                 .mustNotBeBlank();
 
         field("firstName", customer.getFirstName(), note)
-                .validateWhenNotNull()
+                .nullIsValid()
                 .must(contain("s"), "CustomMessage")
                 .mustNotBeBlank()
                 .lengthMustNotExceed(10);
 
         field("firstName", customer.getFirstName(), note)
-                .validateWhenNotNull()
+                .nullIsValid()
                 .must(contain("s"), "Must contain letter S")
                 .when(contain("a"))
                 .then(mustNotBeEmpty(""))
@@ -163,7 +163,7 @@ public class ValidlyTest {
 //                .lengthShouldBeWithin(
 
 
-        assertEquals("CANT_BE_EMPTY", note.get("firstName"));
+        assertEquals("lengthMustBeAtLeast", note.get("firstName"));
 
     }
 

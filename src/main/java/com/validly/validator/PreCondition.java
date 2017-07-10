@@ -2,7 +2,7 @@ package com.validly.validator;
 
 import java.util.Objects;
 
-class PreCondition<T, FV extends FieldValidator> {
+public class PreCondition<T, FV extends FieldValidator> {
 
     protected final FieldValidator<T, FV> fieldValidator;
 
@@ -10,26 +10,26 @@ class PreCondition<T, FV extends FieldValidator> {
         this.fieldValidator = fieldValidator;
     }
 
-    FieldValidator mustNotBeNull() {
+    public FieldValidator mustNotBeNull() {
         this.fieldValidator.setNullIsValid(false);
         this.fieldValidator.must(Objects::nonNull, Conditions.mustNotBeNull);
         return this.fieldValidator;
     }
 
-    FieldValidator validateWhenNotNull() {
+    public FieldValidator nullIsValid() {
         this.fieldValidator.setNullIsValid(true);
         return this.fieldValidator;
     }
 
-    FieldValidator mustNotBeNullWhen(boolean mustNotBeNull) {
+    public FieldValidator mustNotBeNullWhen(boolean mustNotBeNull) {
         if (mustNotBeNull) {
             return mustNotBeNull();
         } else {
-            return validateWhenNotNull();
+            return nullIsValid();
         }
     }
 
-    PreCondition validateWhen(boolean validate) {
+    public PreCondition validateWhen(boolean validate) {
         this.fieldValidator.setIgnore(!validate);
         return this;
     }

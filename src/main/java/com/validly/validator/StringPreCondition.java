@@ -23,8 +23,8 @@ public final class StringPreCondition extends PreCondition<String, StringFieldVa
     }
 
     @Override
-    public StringFieldValidator validateWhenNotNull() {
-        return (StringFieldValidator) super.validateWhenNotNull();
+    public StringFieldValidator nullIsValid() {
+        return (StringFieldValidator) super.nullIsValid();
     }
 
     @Override
