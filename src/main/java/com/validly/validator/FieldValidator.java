@@ -42,7 +42,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
             if (note != null) {
                 note.put(fieldName, identifier);
             } else {
-                throw new ValidationErrorException("Validation failure: " + identifier);
+                throw new ValidationFailureException("Validation failure: " + identifier);
             }
             validationFailed = true;
         }
@@ -50,7 +50,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
     }
 
     public FV must(Predicate<T> predicate) {
-            return must(predicate, Conditions.unknown);
+            return must(predicate, "customMustCondition");
     }
 
     void setNullIsValid(boolean nullIsValid) {
@@ -65,33 +65,24 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return value == null && nullIsValid;
     }
 
-    public WhenCondition when(boolean condition) {
-        return new WhenCondition(condition);
+    @SafeVarargs
+    public final FV when(Predicate<T> predicate, ValidationPredicate<T>... thenPredicates) {
+        return thenValidation(predicate.test(value), thenPredicates);
     }
 
-    public WhenCondition when(Predicate<T> predicate) {
-        return new WhenCondition(predicate.test(value));
+    @SafeVarargs
+    public final FV when(boolean value, ValidationPredicate<T>... thenPredicates) {
+        return thenValidation(value, thenPredicates);
     }
 
-    public class WhenCondition {
-
-        private boolean condition;
-
-        public WhenCondition(boolean condition) {
-            this.condition = condition;
+    @SafeVarargs
+    private final FV thenValidation(boolean whenConditionResult, ValidationPredicate<T>... thenPredicates) {
+        if (whenConditionResult) {
+            Arrays.stream(thenPredicates)
+                    .forEach(p -> must(p.getPredicate(), p.getMessage()));
         }
-
-        @SafeVarargs
-        public final FV then(ValidationPredicate<T>... predicates) {
-            if (condition) {
-                Arrays.stream(predicates)
-                        .forEach(p -> must(p.getPredicate(), p.getMessage()));
-            }
-            return (FV) FieldValidator.this;
-        }
-
+        return (FV) FieldValidator.this;
     }
-
 
 }
 

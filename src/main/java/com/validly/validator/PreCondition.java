@@ -12,7 +12,7 @@ public class PreCondition<T, FV extends FieldValidator> {
 
     public FieldValidator mustNotBeNull() {
         this.fieldValidator.setNullIsValid(false);
-        this.fieldValidator.must(Objects::nonNull, Conditions.mustNotBeNull);
+        this.fieldValidator.must(Objects::nonNull, "mustNotBeNull");
         return this.fieldValidator;
     }
 

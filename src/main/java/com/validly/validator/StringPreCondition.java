@@ -8,7 +8,7 @@ public final class StringPreCondition extends PreCondition<String, StringFieldVa
 
     public StringFieldValidator mustNotBeBlank() {
         this.fieldValidator.setNullIsValid(false);
-        this.fieldValidator.must(ValidationRules.isNotBlank(), Conditions.mustNotBeBlank);
+        this.fieldValidator.must(ValidationRules.isNotBlank(), "mustNotBeBlank");
         return (StringFieldValidator) this.fieldValidator;
     }
 

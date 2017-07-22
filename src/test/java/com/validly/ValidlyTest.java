@@ -1,20 +1,22 @@
 package com.validly;
 
 
-import com.validly.validator.ValidationErrorException;
+import com.validly.validator.ValidationFailureException;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import static com.validly.MyValidationPredicate.mustStartWithS;
 import static com.validly.validator.FieldValidator.field;
+import static com.validly.validator.ValidationPredicate.must;
 import static com.validly.validator.ValidationPredicate.mustNotBeEmpty;
 import static org.junit.Assert.assertEquals;
 
 public class ValidlyTest {
 
-    @Test(expected = ValidationErrorException.class)
+    @Test(expected = ValidationFailureException.class)
     public void testNoNotification() throws Exception {
         Customer customer = new Customer();
         customer.setFirstName(null);
@@ -48,6 +50,20 @@ public class ValidlyTest {
                     .must(s -> !s.startsWith("123123"));
 
 
+            field(customer.getSsn())
+                    .mustNotBeNullWhen(customer.getAge() >= 18)
+                    .must(s -> !s.startsWith("123123"));
+
+            field(customer.getSsn())
+                    .mustNotBeNullWhen(customer.getAge() >= 18)
+                    .must(s -> !s.startsWith("123123"));
+
+
+            field(customer.getSsn())
+                    .mustNotBeNullWhen(customer.getAge() >= 18)
+                    .must(s -> !s.startsWith("123123"));
+
+
             if (customer.getAge() > 18) {
                 String ssn = customer.getSsn();
                 if (ssn == null || ssn.trim().equals("") || !ssn.startsWith("123123")) {
@@ -56,7 +72,7 @@ public class ValidlyTest {
             }
 
 
-        } catch (ValidationErrorException e) {
+        } catch (ValidationFailureException e) {
             System.out.println("Invalid input, " + e.getMessage());
             throw e;
         }
@@ -72,8 +88,7 @@ public class ValidlyTest {
 
         field("firstName", customer.getFirstName(), note)
                 .nullIsValid()
-                .when(true)
-                .then(mustNotBeEmpty("CANT_BE_EMPTY"));
+                .when(true, mustNotBeEmpty("CANT_BE_EMPTY"));
 
         field("lastName", customer.getLastName(), note)
                 .mustNotBeNull()
@@ -136,8 +151,7 @@ public class ValidlyTest {
         field("firstName", customer.getFirstName(), note)
                 .nullIsValid()
                 .must(contain("s"), "Must contain letter S")
-                .when(contain("a"))
-                .then(mustNotBeEmpty(""))
+                .when(contain("a"), mustNotBeEmpty(""))
                 .lengthMustBeWithin(10, 100);
 
         field("firstName", customer.getFirstName(), note)
@@ -147,8 +161,24 @@ public class ValidlyTest {
 
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeNull()
-                .when(customer.getAge() > 18)
-                .then(mustNotBeEmpty("can not be empty if S is defined"));
+                .when(customer.getAge() > 18, mustNotBeEmpty("can not be empty if S is defined"));
+
+
+        field("firstName", customer.getFirstName(), note)
+                .mustNotBeNull()
+                .when(customer.getAge() > 18,
+                        mustNotBeEmpty("can not be empty if S is defined"),
+                        must(s -> s.startsWith("hey"), "does not start with s"));
+
+
+
+        field("firstName", customer.getFirstName(), note)
+                .mustNotBeNull()
+                .when(customer.getAge() > 18,
+                        mustNotBeEmpty("can not be empty if S is defined"),
+                        mustStartWithS());
+
+
 
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeNullWhen(customer.getAge() > 18)

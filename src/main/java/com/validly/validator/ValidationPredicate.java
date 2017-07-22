@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 public class ValidationPredicate<T> {
 
     //TODO what to do with these
+    // extendable, then need to provide messages
+    // otherwise use method name messaging
 
 
     protected final String message;
