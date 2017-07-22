@@ -28,7 +28,11 @@ class ValidationRules {
     }
 
     static Predicate<Integer> maxValue(int max) {
-        return (v) -> isNull(v) || v <= max;
+        return (v) -> v <= max;
+    }
+
+    static Predicate<Integer> minValue(int min) {
+        return (v) -> v >= min;
     }
 
     private static boolean isEmptyString(String v) {

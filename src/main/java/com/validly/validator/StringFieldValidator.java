@@ -12,10 +12,6 @@ public final class StringFieldValidator extends FieldValidator<String, StringFie
         super(fieldName, value, note);
     }
 
-    public StringFieldValidator mustNotBeBlank() {
-        return must(ValidationRules.isNotBlank(), "mustNotBeBlank");
-    }
-
     public StringFieldValidator mustNotBeEmpty() {
         return must(ValidationRules.isNotEmpty(), "mustNotBeEmpty");
     }
@@ -31,6 +27,14 @@ public final class StringFieldValidator extends FieldValidator<String, StringFie
     public StringFieldValidator lengthMustBeWithin(int min, int max) {
         return must(ValidationRules.isWithinMin(min)
                 .and(ValidationRules.isWithinMax(max)), "lengthMustBeWithin");
+    }
+
+    public StringFieldValidator mustContain(String value) {
+        return must(s -> s.contains(value), "mustContain");
+    }
+
+    public StringFieldValidator mustStartWith(String value) {
+        return must(s -> s.startsWith(value), "mustStartWith");
     }
 
 

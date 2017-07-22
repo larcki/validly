@@ -16,7 +16,7 @@ public class PreCondition<T, FV extends FieldValidator> {
         return this.fieldValidator;
     }
 
-    public FieldValidator nullIsValid() {
+    public FieldValidator canBeNull() {
         this.fieldValidator.setNullIsValid(true);
         return this.fieldValidator;
     }
@@ -25,7 +25,7 @@ public class PreCondition<T, FV extends FieldValidator> {
         if (mustNotBeNull) {
             return mustNotBeNull();
         } else {
-            return nullIsValid();
+            return canBeNull();
         }
     }
 

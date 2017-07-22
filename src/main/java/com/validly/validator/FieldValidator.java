@@ -33,8 +33,9 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new StringPreCondition(stringFieldValidator);
     }
 
-    public static IntegerFieldValidator field(String fieldName, Integer value, Map note) {
-        return new IntegerFieldValidator(fieldName, value, note);
+    public static IntegerPreCondition field(String fieldName, Integer value, Map note) {
+        IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(fieldName, value, note);
+        return new IntegerPreCondition(integerFieldValidator);
     }
 
     public FV must(Predicate<T> predicate, String identifier) {

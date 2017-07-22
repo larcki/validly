@@ -6,6 +6,7 @@ public class Customer {
 
     private String firstName;
     private String lastName;
+    private String referralCode;
     private Integer age;
     private List<String> merits;
     private Address address;
@@ -57,6 +58,14 @@ public class Customer {
 
     public void setSsn(String ssn) {
         this.ssn = ssn;
+    }
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
     }
 }
 
