@@ -2,10 +2,12 @@ package com.validly;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.validly.validator.FieldValidator.field;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class CustomerScenarioTest {
 
@@ -40,12 +42,36 @@ public class CustomerScenarioTest {
                 .mustNotBeNullWhen(customer.getAge() > 18)
                 .lengthMustNotExceed(10);
 
-        if (!notifications.isEmpty()) {
-            notifications.forEach((field, reason) -> System.out.println(field + ": " + reason));
-        }
+        print(notifications);
 
         //TODO: makes sense to rename to isRequired etc.
         // examples about the result and that custom messages can be provided, e.g
+    }
+
+    @Test
+    public void testDateString() throws Exception {
+        String date = "12.12.2015";
+
+        HashMap<String, String> note = new HashMap<>();
+
+        field("date", date, note)
+                .mustNotBeNull()
+                .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")))
+                .must(d -> d.isAfter(LocalDate.now()), "date must be in the future");
+
+        print(note);
+    }
+
+    @Test
+    public void testDate() throws Exception {
+        LocalDate date = LocalDate.of(2017, 12, 12);
+
+        Map<String, String> note = new HashMap<>();
+
+        field("", date, note)
+                .mustNotBeNull()
+                .must(localDate -> localDate.isAfter(LocalDate.now()));
+
     }
 
     @Test
@@ -61,4 +87,11 @@ public class CustomerScenarioTest {
 
         //TODO: more cases
     }
+
+    private void print(Map<String, String> note) {
+        if (!note.isEmpty()) {
+            note.forEach((field, reason) -> System.out.println(field + ": " + reason));
+        }
+    }
+
 }

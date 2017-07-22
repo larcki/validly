@@ -10,18 +10,18 @@ public class PreCondition<T, FV extends FieldValidator> {
         this.fieldValidator = fieldValidator;
     }
 
-    public FieldValidator mustNotBeNull() {
+    public FieldValidator<T, ? extends FieldValidator> mustNotBeNull() {
         this.fieldValidator.setNullIsValid(false);
         this.fieldValidator.must(Objects::nonNull, "mustNotBeNull");
         return this.fieldValidator;
     }
 
-    public FieldValidator canBeNull() {
+    public FieldValidator<T, ? extends FieldValidator> canBeNull() {
         this.fieldValidator.setNullIsValid(true);
         return this.fieldValidator;
     }
 
-    public FieldValidator mustNotBeNullWhen(boolean mustNotBeNull) {
+    public FieldValidator<T, ? extends FieldValidator> mustNotBeNullWhen(boolean mustNotBeNull) {
         if (mustNotBeNull) {
             return mustNotBeNull();
         } else {
@@ -29,7 +29,7 @@ public class PreCondition<T, FV extends FieldValidator> {
         }
     }
 
-    public PreCondition validateWhen(boolean validate) {
+    public PreCondition<T, ? extends FieldValidator> validateWhen(boolean validate) {
         this.fieldValidator.setIgnore(!validate);
         return this;
     }

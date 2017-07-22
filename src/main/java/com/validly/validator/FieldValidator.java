@@ -1,7 +1,9 @@
 package com.validly.validator;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FieldValidator<T, FV extends FieldValidator> {
@@ -38,14 +40,14 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new IntegerPreCondition(integerFieldValidator);
     }
 
+    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Map note) {
+        FieldValidator<LocalDate, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
+        return new PreCondition<>(fieldValidator);
+    }
+
     public FV must(Predicate<T> predicate, String identifier) {
         if (!ignore && !validationFailed && !valueIsNullAndItsValid() && !predicate.test(value)) {
-            if (note != null) {
-                note.put(fieldName, identifier);
-            } else {
-                throw new ValidationFailureException("Validation failure: " + identifier);
-            }
-            validationFailed = true;
+            markAsFailed(identifier);
         }
         return (FV) this;
     }
@@ -84,6 +86,45 @@ public class FieldValidator<T, FV extends FieldValidator> {
         }
         return (FV) FieldValidator.this;
     }
+
+    public <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> mustConvert(Function<T, NEW_TYPE> conversionFunction) {
+        return mustConvert(conversionFunction, "mustConvert");
+    }
+
+    public <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> mustConvert(Function<T, NEW_TYPE> conversionFunction, String message) {
+        NEW_TYPE convertedValue = null;
+        try {
+            convertedValue = conversionFunction.apply(value);
+            if (convertedValue == null) {
+                markAsFailed(message);
+            }
+        } catch (Exception e) {
+            markAsFailed(message);
+        }
+        return copyValidator(convertedValue);
+    }
+
+    private void markAsFailed(String identifier) {
+        if (note != null) {
+            note.put(fieldName, identifier);
+        } else {
+            throw new ValidationFailureException("Validation failure: " + identifier);
+        }
+        validationFailed = true;
+    }
+
+    private <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> copyValidator(NEW_TYPE value) {
+        FieldValidator<NEW_TYPE, FieldValidator> newValidator = new FieldValidator<>(fieldName, value, note);
+        newValidator.setIgnore(ignore);
+        newValidator.setNullIsValid(nullIsValid);
+        newValidator.setValidationFailed(validationFailed);
+        return newValidator;
+    }
+
+    private void setValidationFailed(boolean validationFailed) {
+        this.validationFailed = validationFailed;
+    }
+
 
 }
 
