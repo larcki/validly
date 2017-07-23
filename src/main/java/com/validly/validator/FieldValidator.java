@@ -2,7 +2,7 @@ package com.validly.validator;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -10,22 +10,36 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
     private final String fieldName;
     private final T value;
-    private final Map<Object, Object> note;
+    private final Notification note;
     private boolean validationFailed;
     private boolean nullIsValid;
     private boolean ignore;
 
-    protected FieldValidator(String fieldName, T value, Map<Object, Object> note) {
+    protected FieldValidator(String fieldName, T value, Notification note) {
         this.fieldName = fieldName;
         this.value = value;
         this.note = note;
     }
 
-    protected FieldValidator(T value) {
-        this(null, value, null);
+    protected FieldValidator(String fieldName, T value, List<String> note) {
+        this(fieldName, value, new FlatNotification(note));
     }
 
-    public static StringPreCondition field(String fieldName, String value, Map note) {
+    //TODO put fail-fast validation into different class
+    protected FieldValidator(T value) {
+        this.fieldName = null;
+        this.value = value;
+        this.note = null;
+    }
+
+    // STRING //
+
+    public static StringPreCondition field(String fieldName, String value, Notification note) {
+        StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
+        return new StringPreCondition(stringFieldValidator);
+    }
+
+    public static StringPreCondition field(String fieldName, String value, List<String> note) {
         StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
         return new StringPreCondition(stringFieldValidator);
     }
@@ -35,12 +49,23 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new StringPreCondition(stringFieldValidator);
     }
 
-    public static IntegerPreCondition field(String fieldName, Integer value, Map note) {
+
+    // INTEGER //
+
+    public static IntegerPreCondition field(String fieldName, Integer value, Notification note) {
         IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(fieldName, value, note);
         return new IntegerPreCondition(integerFieldValidator);
     }
 
-    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Map note) {
+    public static IntegerPreCondition field(String fieldName, Integer value, List<String> note) {
+        IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(fieldName, value, note);
+        return new IntegerPreCondition(integerFieldValidator);
+    }
+
+
+    // LOCALDATE //
+
+    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Notification note) {
         FieldValidator<LocalDate, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
         return new PreCondition<>(fieldValidator);
     }
@@ -106,7 +131,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
     private void markAsFailed(String identifier) {
         if (note != null) {
-            note.put(fieldName, identifier);
+            note.addMessage(fieldName, identifier);
         } else {
             throw new ValidationFailureException("Validation failure: " + identifier);
         }

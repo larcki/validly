@@ -1,10 +1,11 @@
 package com.validly;
 
+import com.validly.validator.Notification;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.validly.validator.FieldValidator.field;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -20,29 +21,29 @@ public class CustomerScenarioTest {
         customer.setReferralCode("REF.111122223333");
         customer.setSsn("tooLongValue");
 
-        Map<String, String> notifications = new HashMap<>();
+        Notification note = new Notification();
 
-        field("firstName", customer.getFirstName(), notifications)
+        field("firstName", customer.getFirstName(), note)
                 .mustNotBeBlank()
                 .lengthMustBeAtLeast(2)
                 .lengthMustNotExceed(100);
 
-        field("age", customer.getAge(), notifications)
+        field("age", customer.getAge(), note)
                 .mustNotBeNull()
                 .valueMustBeAtLeast(1)
                 .valueMustNotExceed(130);
 
-        field("referralCode", customer.getReferralCode(), notifications)
+        field("referralCode", customer.getReferralCode(), note)
                 .canBeNull()
                 .mustStartWith("REF")
                 .mustContain("-")
                 .lengthMustBeWithin(10, 20);
 
-        field("ssn", customer.getSsn(), notifications)
+        field("ssn", customer.getSsn(), note)
                 .mustNotBeNullWhen(customer.getAge() > 18)
                 .lengthMustNotExceed(10);
 
-        print(notifications);
+        print(note);
 
         //TODO: makes sense to rename to isRequired etc.
         // examples about the result and that custom messages can be provided, e.g
@@ -52,7 +53,7 @@ public class CustomerScenarioTest {
     public void testDateString() throws Exception {
         String date = "12.12.2015";
 
-        HashMap<String, String> note = new HashMap<>();
+        Notification note = new Notification();
 
         field("date", date, note)
                 .mustNotBeNull()
@@ -66,7 +67,7 @@ public class CustomerScenarioTest {
     public void testDate() throws Exception {
         LocalDate date = LocalDate.of(2017, 12, 12);
 
-        Map<String, String> note = new HashMap<>();
+        Notification note = new Notification();
 
         field("", date, note)
                 .mustNotBeNull()
@@ -79,19 +80,60 @@ public class CustomerScenarioTest {
         Address address = new Address();
         address.setPostCode("");
 
-        Map<String, String> notifications = new HashMap<>();
+        Notification note = new Notification();
 
-        field("postCode", address.getPostCode(), notifications)
+        field("postCode", address.getPostCode(), note)
                 .mustNotBeNull()
                 .must(s -> s.matches("//your.regex+"));
 
         //TODO: more cases
     }
 
-    private void print(Map<String, String> note) {
-        if (!note.isEmpty()) {
-            note.forEach((field, reason) -> System.out.println(field + ": " + reason));
+    @Test
+    public void testListNote() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("J");
+        customer.setAge(0);
+        customer.setReferralCode("REF.111122223333");
+        customer.setSsn("tooLongValue");
+
+        List<String> note = new ArrayList<>();
+
+        field("firstName", customer.getFirstName(), note)
+                .mustNotBeBlank()
+                .lengthMustBeAtLeast(2)
+                .lengthMustNotExceed(100);
+
+        field("age", customer.getAge(), note)
+                .mustNotBeNull()
+                .valueMustBeAtLeast(1)
+                .valueMustNotExceed(130);
+
+        field("referralCode", customer.getReferralCode(), note)
+                .canBeNull()
+                .mustStartWith("REF")
+                .mustContain("-")
+                .lengthMustBeWithin(10, 20);
+
+        field("ssn", customer.getSsn(), note)
+                .mustNotBeNullWhen(customer.getAge() > 18)
+                .lengthMustNotExceed(10);
+
+
+        print(note);
+    }
+
+    private void print(Notification note) {
+        if (note.isNotEmpty()) {
+            note.getMessages().forEach((field, reason) -> System.out.println(field + ": " + reason));
         }
     }
+
+    private void print(List<String> note) {
+        if (!note.isEmpty()) {
+            note.forEach(System.out::println);
+        }
+    }
+
 
 }

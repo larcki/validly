@@ -1,13 +1,19 @@
 Validly - Validation library for Java 8
 =======================================
 
-Validly is an abstraction of the conditional constructs of the language and provides convenience methods for the most commonly used validation conditions.
+Validly is an abstraction of the conditional constructs of the language that provides convenience methods for the most commonly used validation conditions.
 
 * Focus on expressing the validation rules instead of writing an if-else mess.
 * Use [Notification pattern](https://martinfowler.com/articles/replaceThrowWithNotification.html) to capture all the validation failures.
 
 Using Validly
 -------------
+
+There are two different ways of using Validly. 
+
+1. Notification pattern mode: evaluates all the validation rules and gathers the failures into a notification object.
+2. Fail-fast mode: throws an exception when the first validation failure happens. 
+
 
 ```java
 

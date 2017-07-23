@@ -1,10 +1,14 @@
 package com.validly.validator;
 
-import java.util.Map;
+import java.util.List;
 
 public final class IntegerFieldValidator extends FieldValidator<Integer, IntegerFieldValidator> {
 
-    protected IntegerFieldValidator(String fieldName, Integer value, Map note) {
+    protected IntegerFieldValidator(String fieldName, Integer value, Notification note) {
+        super(fieldName, value, note);
+    }
+
+    protected IntegerFieldValidator(String fieldName, Integer value, List<String> note) {
         super(fieldName, value, note);
     }
 

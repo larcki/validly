@@ -1,6 +1,6 @@
 package com.validly.validator;
 
-import java.util.Map;
+import java.util.List;
 
 public final class StringFieldValidator extends FieldValidator<String, StringFieldValidator> {
 
@@ -8,7 +8,11 @@ public final class StringFieldValidator extends FieldValidator<String, StringFie
         super(value);
     }
 
-    protected StringFieldValidator(String fieldName, String value, Map note) {
+    protected StringFieldValidator(String fieldName, String value, Notification note) {
+        super(fieldName, value, note);
+    }
+
+    protected StringFieldValidator(String fieldName, String value, List<String> note) {
         super(fieldName, value, note);
     }
 
