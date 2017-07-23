@@ -9,8 +9,8 @@ public final class IntegerFieldValidator extends FieldValidator<Integer, Integer
         super(fieldName, value, note);
     }
 
-    protected IntegerFieldValidator(String fieldName, Integer value, List<String> note) {
-        super(fieldName, value, note);
+    protected IntegerFieldValidator(Integer value, List<String> note) {
+        super(value, note);
     }
 
     protected IntegerFieldValidator(Integer value) {

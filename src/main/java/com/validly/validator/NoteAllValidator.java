@@ -10,8 +10,8 @@ public class NoteAllValidator {
         validator.setFailOnFirst(false);
         return new StringPreCondition(validator);
     }
-    public static StringPreCondition field(String fieldName, String value, List<String> note) {
-        StringFieldValidator validator = new StringFieldValidator(fieldName, value, note);
+    public static StringPreCondition field(String value, List<String> note) {
+        StringFieldValidator validator = new StringFieldValidator(value, note);
         validator.setFailOnFirst(false);
         return new StringPreCondition(validator);
     }
@@ -23,8 +23,8 @@ public class NoteAllValidator {
         validator.setFailOnFirst(false);
         return new IntegerPreCondition(validator);
     }
-    public static IntegerPreCondition field(String fieldName, Integer value, List<String> note) {
-        IntegerFieldValidator validator = new IntegerFieldValidator(fieldName, value, note);
+    public static IntegerPreCondition field(Integer value, List<String> note) {
+        IntegerFieldValidator validator = new IntegerFieldValidator(value, note);
         validator.setFailOnFirst(false);
         return new IntegerPreCondition(validator);
     }
@@ -35,8 +35,8 @@ public class NoteAllValidator {
         FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
         return new PreCondition<>(fieldValidator);
     }
-    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, List<String> note) {
-        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
+    public static <T> PreCondition<T, FieldValidator> field(T value, List<String> note) {
+        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(value, note);
         return new PreCondition<>(fieldValidator);
     }
 

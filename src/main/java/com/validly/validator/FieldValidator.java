@@ -21,24 +21,14 @@ public class FieldValidator<T, FV extends FieldValidator> {
         this.note = note;
     }
 
-    protected FieldValidator(String fieldName, T value, List<String> note) {
-        this(fieldName, value, new FlatNotification(note));
+    protected FieldValidator(T value, List<String> note) {
+        this(null, value, new FlatNotification(note));
     }
 
     protected FieldValidator(T value) {
         this.fieldName = null;
         this.value = value;
         this.note = null;
-    }
-
-    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, Notification note) {
-        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
-        return new PreCondition<>(fieldValidator);
-    }
-
-    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, List<String> note) {
-        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
-        return new PreCondition<>(fieldValidator);
     }
 
     public FieldValidator<T, FV> must(Predicate<T> predicate) {

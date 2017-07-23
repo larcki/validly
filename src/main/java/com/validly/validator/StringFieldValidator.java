@@ -13,8 +13,8 @@ public final class StringFieldValidator extends FieldValidator<String, StringFie
         super(fieldName, value, note);
     }
 
-    protected StringFieldValidator(String fieldName, String value, List<String> note) {
-        super(fieldName, value, note);
+    protected StringFieldValidator(String value, List<String> note) {
+        super(value, note);
     }
 
     public StringFieldValidator mustNotBeEmpty() {

@@ -104,23 +104,23 @@ public class CustomerScenarioTest {
 
         List<String> note = new ArrayList<>();
 
-        field("firstName", customer.getFirstName(), note)
+        field(customer.getFirstName(), note)
                 .mustNotBeBlank()
                 .must(s -> s.startsWith("K"), "start with fails")
                 .lengthMustNotExceed(100);
 
-        field("age", customer.getAge(), note)
+        field(customer.getAge(), note)
                 .mustNotBeNull()
                 .valueMustBeAtLeast(1)
                 .valueMustNotExceed(130);
 
-        field("referralCode", customer.getReferralCode(), note)
+        field(customer.getReferralCode(), note)
                 .canBeNull()
                 .mustStartWith("REF")
                 .mustContain("-")
                 .lengthMustBeWithin(10, 20);
 
-        field("ssn", customer.getSsn(), note)
+        field(customer.getSsn(), note)
                 .mustNotBeNullWhen(customer.getAge() > 18)
                 .lengthMustNotExceed(10);
 
@@ -165,7 +165,7 @@ public class CustomerScenarioTest {
 
         List<String> note = new ArrayList<>();
 
-        field("fieldName", instant, note)
+        field(instant, note)
                 .mustNotBeNull()
                 .must(i -> i.isAfter(Instant.now()))
                 .must(i -> i.isBefore(Instant.now().plus(3, ChronoUnit.DAYS)), "AAA");
