@@ -1,5 +1,6 @@
 Validly - Validation library for Java 8
 =======================================
+[![Build Status](https://travis-ci.org/larcki/validly.svg?branch=master)](https://travis-ci.org/larcki/validly)
 
 Validly is an abstraction of the conditional constructs of the language that provides convenience methods for the most commonly used validation conditions.
 
