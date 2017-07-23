@@ -67,7 +67,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
     @SafeVarargs
     public final FieldValidator<T, FV> when(Predicate<T> predicate, ValidationPredicate<T>... thenPredicates) {
-        return thenValidation(predicate.test(value), thenPredicates);
+        return thenValidation(!stopValidation && predicate.test(value), thenPredicates);
     }
 
     @SafeVarargs
