@@ -9,11 +9,11 @@ Validly is an abstraction of the conditional constructs of the language that pro
 Using Validly
 -------------
 
-There are two different ways of using Validly. 
+There are three different ways of using Validly. 
 
-1. Notification pattern mode: evaluates all the validation rules and gathers the failures into a List or Notification object.
-2. Fail-fast mode: throws an exception when the first validation failure happens. 
-
+1. Note First mode: gathers the first failure of each field into a List or Notification object.
+2. Note All mode: gathers all the failures of each field into a List or Notification object. 
+3. Fail-Fast mode: throws a ValidationFailureException when validation failure occurs.
 
 ```java
 

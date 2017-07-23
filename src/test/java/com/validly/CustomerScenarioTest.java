@@ -2,6 +2,7 @@ package com.validly;
 
 import com.validly.validator.FailFastValidator;
 import com.validly.validator.Notification;
+import com.validly.validator.ValidationFailureException;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class CustomerScenarioTest {
 
         field("referralCode", customer.getReferralCode(), note)
                 .canBeNull()
-                .mustStartWith("REF")
+                .mustStartWith("REX")
                 .mustContain("-")
                 .lengthMustBeWithin(10, 20);
 
@@ -52,7 +53,7 @@ public class CustomerScenarioTest {
 
     @Test
     public void testDateString() throws Exception {
-        String date = "12.12.2015";
+        String date = "12.12.xxx";
 
         Notification note = new Notification();
 
@@ -95,7 +96,7 @@ public class CustomerScenarioTest {
         Customer customer = new Customer();
         customer.setFirstName("J");
         customer.setAge(0);
-        customer.setReferralCode("REF.111122223333");
+        customer.setReferralCode("RSEF.111122223333");
         customer.setSsn("tooLongValue");
 
         List<String> note = new ArrayList<>();
@@ -125,7 +126,7 @@ public class CustomerScenarioTest {
     }
 
 
-    @Test
+    @Test(expected = ValidationFailureException.class)
     public void testFailFast() throws Exception {
         Customer customer = new Customer();
         customer.setFirstName("J");

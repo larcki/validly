@@ -11,7 +11,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
     private final String fieldName;
     private final T value;
     private final Notification note;
-    private boolean validationFailed;
+    private boolean stopValidation;
     private boolean nullIsValid;
     private boolean ignore;
 
@@ -25,14 +25,11 @@ public class FieldValidator<T, FV extends FieldValidator> {
         this(fieldName, value, new FlatNotification(note));
     }
 
-    //TODO put fail-fast validation into different class
     protected FieldValidator(T value) {
         this.fieldName = null;
         this.value = value;
         this.note = null;
     }
-
-    // STRING //
 
     public static StringPreCondition field(String fieldName, String value, Notification note) {
         StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
@@ -44,11 +41,6 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new StringPreCondition(stringFieldValidator);
     }
 
-
-
-
-    // INTEGER //
-
     public static IntegerPreCondition field(String fieldName, Integer value, Notification note) {
         IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(fieldName, value, note);
         return new IntegerPreCondition(integerFieldValidator);
@@ -59,17 +51,14 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new IntegerPreCondition(integerFieldValidator);
     }
 
-
-    // LOCALDATE //
-
     public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Notification note) {
         FieldValidator<LocalDate, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
         return new PreCondition<>(fieldValidator);
     }
 
-    public FV must(Predicate<T> predicate, String identifier) {
-        if (!ignore && !validationFailed && !valueIsNullAndItsValid() && !predicate.test(value)) {
-            markAsFailed(identifier);
+    public FV must(Predicate<T> predicate, String message) {
+        if (!ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value)) {
+            markAsFailed(message);
         }
         return (FV) this;
     }
@@ -116,37 +105,49 @@ public class FieldValidator<T, FV extends FieldValidator> {
     public <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> mustConvert(Function<T, NEW_TYPE> conversionFunction, String message) {
         NEW_TYPE convertedValue = null;
         try {
-            convertedValue = conversionFunction.apply(value);
+            if (!stopValidation) {
+                convertedValue = conversionFunction.apply(value);
+            }
             if (convertedValue == null) {
                 markAsFailed(message);
+                stopValidation = true;
             }
         } catch (Exception e) {
             markAsFailed(message);
+            stopValidation = true;
         }
         return copyValidator(convertedValue);
     }
 
-    private void markAsFailed(String identifier) {
+    private void markAsFailed(String message) {
         if (note != null) {
-            note.addMessage(fieldName, identifier);
+            note.addMessage(fieldName, message);
         } else {
-            throw new ValidationFailureException("Validation failure: " + identifier);
+            throw new ValidationFailureException("Validation failure: " + message);
         }
-        validationFailed = true;
     }
+
+    //TODO implement for others than fail-fast as well
+//    private <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> copyValidator(NEW_TYPE value) {
+//        FieldValidator<NEW_TYPE, FieldValidator> newValidator = new FieldValidator<>(value);
+//        newValidator.setIgnore(ignore);
+//        newValidator.setNullIsValid(nullIsValid);
+//        newValidator.setStopValidation(stopValidation);
+//        return newValidator;
+//    }
 
     private <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> copyValidator(NEW_TYPE value) {
         FieldValidator<NEW_TYPE, FieldValidator> newValidator = new FieldValidator<>(fieldName, value, note);
         newValidator.setIgnore(ignore);
         newValidator.setNullIsValid(nullIsValid);
-        newValidator.setValidationFailed(validationFailed);
+        newValidator.setStopValidation(stopValidation);
         return newValidator;
     }
 
-    private void setValidationFailed(boolean validationFailed) {
-        this.validationFailed = validationFailed;
-    }
 
+    private void setStopValidation(boolean stopValidation) {
+        this.stopValidation = stopValidation;
+    }
 
 }
 
