@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.validly.validator.FieldValidator.field;
+import static com.validly.validator.NoteFirstValidator.field;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class CustomerScenarioTest {

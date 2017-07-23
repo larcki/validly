@@ -1,6 +1,5 @@
 package com.validly.validator;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -14,6 +13,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
     private boolean stopValidation;
     private boolean nullIsValid;
     private boolean ignore;
+    private boolean failOnFirst;
 
     protected FieldValidator(String fieldName, T value, Notification note) {
         this.fieldName = fieldName;
@@ -31,28 +31,9 @@ public class FieldValidator<T, FV extends FieldValidator> {
         this.note = null;
     }
 
-    public static StringPreCondition field(String fieldName, String value, Notification note) {
-        StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
-        return new StringPreCondition(stringFieldValidator);
-    }
-
-    public static StringPreCondition field(String fieldName, String value, List<String> note) {
-        StringFieldValidator stringFieldValidator = new StringFieldValidator(fieldName, value, note);
-        return new StringPreCondition(stringFieldValidator);
-    }
-
-    public static IntegerPreCondition field(String fieldName, Integer value, Notification note) {
-        IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(fieldName, value, note);
-        return new IntegerPreCondition(integerFieldValidator);
-    }
-
-    public static IntegerPreCondition field(String fieldName, Integer value, List<String> note) {
-        IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(fieldName, value, note);
-        return new IntegerPreCondition(integerFieldValidator);
-    }
-
-    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Notification note) {
-        FieldValidator<LocalDate, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
+    //TODO how to support any object with just must() perdiate?
+    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, Notification note) {
+        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
         return new PreCondition<>(fieldValidator);
     }
 
@@ -125,6 +106,9 @@ public class FieldValidator<T, FV extends FieldValidator> {
         } else {
             throw new ValidationFailureException("Validation failure: " + message);
         }
+        if (failOnFirst) {
+            stopValidation = true;
+        }
     }
 
     //TODO implement for others than fail-fast as well
@@ -141,13 +125,16 @@ public class FieldValidator<T, FV extends FieldValidator> {
         newValidator.setIgnore(ignore);
         newValidator.setNullIsValid(nullIsValid);
         newValidator.setStopValidation(stopValidation);
+        newValidator.setFailOnFirst(failOnFirst);
         return newValidator;
     }
 
+    protected void setFailOnFirst(boolean failOnFirst) {
+        this.failOnFirst = failOnFirst;
+    }
 
     private void setStopValidation(boolean stopValidation) {
         this.stopValidation = stopValidation;
     }
 
 }
-
