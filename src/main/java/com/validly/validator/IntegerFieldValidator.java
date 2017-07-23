@@ -12,6 +12,10 @@ public final class IntegerFieldValidator extends FieldValidator<Integer, Integer
         super(fieldName, value, note);
     }
 
+    protected IntegerFieldValidator(Integer value) {
+        super(value);
+    }
+
     public IntegerFieldValidator valueMustBeAtLeast(int min) {
         return must(ValidationRules.minValue(min), "valueMustBeAtLeast");
     }

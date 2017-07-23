@@ -11,7 +11,7 @@ Using Validly
 
 There are two different ways of using Validly. 
 
-1. Notification pattern mode: evaluates all the validation rules and gathers the failures into a notification object.
+1. Notification pattern mode: evaluates all the validation rules and gathers the failures into a List or Notification object.
 2. Fail-fast mode: throws an exception when the first validation failure happens. 
 
 

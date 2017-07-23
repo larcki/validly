@@ -44,10 +44,7 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new StringPreCondition(stringFieldValidator);
     }
 
-    public static StringPreCondition field(String value) {
-        StringFieldValidator stringFieldValidator = new StringFieldValidator(value);
-        return new StringPreCondition(stringFieldValidator);
-    }
+
 
 
     // INTEGER //

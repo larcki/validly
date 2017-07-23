@@ -1,5 +1,6 @@
 package com.validly;
 
+import com.validly.validator.FailFastValidator;
 import com.validly.validator.Notification;
 import org.junit.Test;
 
@@ -121,6 +122,37 @@ public class CustomerScenarioTest {
 
 
         print(note);
+    }
+
+
+    @Test
+    public void testFailFast() throws Exception {
+        Customer customer = new Customer();
+        customer.setFirstName("J");
+        customer.setAge(0);
+        customer.setReferralCode("REF.111122223333");
+        customer.setSsn("tooLongValue");
+
+        FailFastValidator.field(customer.getFirstName())
+                .mustNotBeBlank()
+                .lengthMustBeAtLeast(2)
+                .lengthMustNotExceed(100);
+
+        FailFastValidator.field(customer.getAge())
+                .mustNotBeNull()
+                .valueMustBeAtLeast(1)
+                .valueMustNotExceed(130);
+
+        FailFastValidator.field(customer.getReferralCode())
+                .canBeNull()
+                .mustStartWith("REF")
+                .mustContain("-")
+                .lengthMustBeWithin(10, 20);
+
+        FailFastValidator.field(customer.getSsn())
+                .mustNotBeNullWhen(customer.getAge() > 18)
+                .lengthMustNotExceed(10);
+
     }
 
     private void print(Notification note) {
