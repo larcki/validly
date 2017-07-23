@@ -1,6 +1,7 @@
 package com.validly.validator;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public final class IntegerFieldValidator extends FieldValidator<Integer, IntegerFieldValidator> {
 
@@ -24,10 +25,13 @@ public final class IntegerFieldValidator extends FieldValidator<Integer, Integer
         return must(ValidationRules.maxValue(min), "valueMustNotExceed");
     }
 
-
     public IntegerFieldValidator valueMustBeWithin(int min, int max) {
         return must(ValidationRules.minValue(min)
                 .and(ValidationRules.maxValue(max)), "valueMustBeWithin");
+    }
+
+    public IntegerFieldValidator must(Predicate<Integer> predicate, String message) {
+        return (IntegerFieldValidator) super.must(predicate, message);
     }
 
 }

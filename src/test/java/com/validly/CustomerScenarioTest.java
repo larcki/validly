@@ -3,10 +3,12 @@ package com.validly;
 import com.validly.validator.FailFastValidator;
 import com.validly.validator.Notification;
 import com.validly.validator.ValidationFailureException;
+import com.validly.validator.ValidationPredicate;
 import org.junit.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,13 +70,15 @@ public class CustomerScenarioTest {
 
     @Test
     public void testDate() throws Exception {
-        LocalDate date = LocalDate.of(2017, 12, 12);
+        LocalDate date = LocalDate.of(2016, 12, 3);
 
         Notification note = new Notification();
 
         field("", date, note)
                 .mustNotBeNull()
-                .must(localDate -> localDate.isAfter(LocalDate.now()));
+                .when(localDate -> localDate.isBefore(LocalDate.now()),
+                        ValidationPredicate.must(LocalDate::isLeapYear, "must be leap year when in the past"))
+                .must(localDate -> localDate.getDayOfMonth() == 3, "must be 3 day of month");
 
         print(note);
     }
@@ -105,7 +109,7 @@ public class CustomerScenarioTest {
 
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeBlank()
-                .lengthMustBeAtLeast(2)
+                .must(s -> s.startsWith("K"), "start with fails")
                 .lengthMustNotExceed(100);
 
         field("age", customer.getAge(), note)
@@ -160,16 +164,14 @@ public class CustomerScenarioTest {
 
     @Test
     public void testCustomClass() throws Exception {
-        Instant instant = Instant.now();
-//        Instant instant = null;
+        Instant instant = Instant.now().plus(5, ChronoUnit.DAYS);
 
         List<String> note = new ArrayList<>();
-        //TODO: first must does not return proper type
 
         field("fieldName", instant, note)
-            .mustNotBeNull()
-            .must(i -> i.isAfter(Instant.now()))
-            .must(o -> o.equals(o));
+                .mustNotBeNull()
+                .must(i -> i.isAfter(Instant.now()))
+                .must(i -> i.isBefore(Instant.now().plus(3, ChronoUnit.DAYS)), "AAA");
 
         print(note);
 

@@ -31,67 +31,67 @@ public class FieldValidator<T, FV extends FieldValidator> {
         this.note = null;
     }
 
-    //TODO how to support any object with just must() perdiate?
     public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, Notification note) {
         FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
         return new PreCondition<>(fieldValidator);
     }
 
-    //TODO how to support any object with just must() perdiate?
     public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, List<String> note) {
         FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
         return new PreCondition<>(fieldValidator);
     }
 
-    public FV mustFatally(Predicate<T> predicate, String message) {
-        if (!ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value)) {
+    public FieldValidator<T, FV> must(Predicate<T> predicate) {
+        return must(predicate, "customMustCondition");
+    }
+
+    public FieldValidator<T, FV> must(Predicate<T> predicate, String message) {
+        if (checkFailure(predicate)) {
+            markAsFailed(message);
+        }
+        return this;
+    }
+
+    public FieldValidator<T, FV> mustFatally(Predicate<T> predicate, String message) {
+        if (checkFailure(predicate)) {
             stopValidation = true;
             markAsFailed(message);
         }
-        return (FV) this;
+        return this;
     }
 
-
-    public FV must(Predicate<T> predicate, String message) {
-        if (!ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value)) {
-            markAsFailed(message);
-        }
-        return (FV) this;
-    }
-
-    public FV must(Predicate<T> predicate) {
-            return must(predicate, "customMustCondition");
-    }
-
-    void setNullIsValid(boolean nullIsValid) {
-        this.nullIsValid = nullIsValid;
-    }
-
-    void setIgnore(boolean ignore) {
-        this.ignore = ignore;
+    private boolean checkFailure(Predicate<T> predicate) {
+        return !ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value);
     }
 
     private boolean valueIsNullAndItsValid() {
         return value == null && nullIsValid;
     }
 
+
+    // When-Then Construct
+    //
+    // FIXME: these will not return the TypedValidator (e.g. StringValidator) and cannot be overriden
+    // workaraund: If only provide on predicate then no need to declare final (with safeVarargs) and override them
+
+
     @SafeVarargs
-    public final FV when(Predicate<T> predicate, ValidationPredicate<T>... thenPredicates) {
+    public final FieldValidator<T, FV> when(Predicate<T> predicate, ValidationPredicate<T>... thenPredicates) {
         return thenValidation(predicate.test(value), thenPredicates);
     }
 
     @SafeVarargs
-    public final FV when(boolean value, ValidationPredicate<T>... thenPredicates) {
+    public final FieldValidator<T, FV> when(boolean value, ValidationPredicate<T>... thenPredicates) {
         return thenValidation(value, thenPredicates);
     }
 
     @SafeVarargs
-    private final FV thenValidation(boolean whenConditionResult, ValidationPredicate<T>... thenPredicates) {
+    private final FieldValidator<T, FV> thenValidation(boolean whenConditionResult, ValidationPredicate<T>... thenPredicates) {
         if (whenConditionResult) {
             Arrays.stream(thenPredicates)
                     .forEach(p -> must(p.getPredicate(), p.getMessage()));
         }
-        return (FV) FieldValidator.this;
+        return FieldValidator.this;
     }
 
     public <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> mustConvert(Function<T, NEW_TYPE> conversionFunction) {
@@ -150,6 +150,14 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
     protected void setStopValidation(boolean stopValidation) {
         this.stopValidation = stopValidation;
+    }
+
+    void setNullIsValid(boolean nullIsValid) {
+        this.nullIsValid = nullIsValid;
+    }
+
+    void setIgnore(boolean ignore) {
+        this.ignore = ignore;
     }
 
 

@@ -1,6 +1,7 @@
 package com.validly.validator;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public final class StringFieldValidator extends FieldValidator<String, StringFieldValidator> {
 
@@ -39,6 +40,10 @@ public final class StringFieldValidator extends FieldValidator<String, StringFie
 
     public StringFieldValidator mustStartWith(String value) {
         return must(s -> s.startsWith(value), "mustStartWith");
+    }
+
+    public StringFieldValidator must(Predicate<String> predicate, String message) {
+        return (StringFieldValidator) super.must(predicate, message);
     }
 
 
