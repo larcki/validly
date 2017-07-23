@@ -2,15 +2,7 @@ package com.validly.validator;
 
 import java.util.List;
 
-public class NoteAllValidator <T> extends FieldValidator<T, NoteAllValidator> {
-
-    protected NoteAllValidator(String fieldName, T value, Notification note) {
-        super(fieldName, value, note);
-    }
-
-    protected NoteAllValidator(String fieldName, T value, List<String> note) {
-        super(fieldName, value, note);
-    }
+public class NoteAllValidator {
 
     // STRING
     public static StringPreCondition field(String fieldName, String value, Notification note) {
@@ -35,6 +27,17 @@ public class NoteAllValidator <T> extends FieldValidator<T, NoteAllValidator> {
         IntegerFieldValidator validator = new IntegerFieldValidator(fieldName, value, note);
         validator.setFailOnFirst(false);
         return new IntegerPreCondition(validator);
+    }
+
+
+    // GENERIC
+    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, Notification note) {
+        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
+        return new PreCondition<>(fieldValidator);
+    }
+    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, List<String> note) {
+        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
+        return new PreCondition<>(fieldValidator);
     }
 
 }

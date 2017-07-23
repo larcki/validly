@@ -1,9 +1,6 @@
 package com.validly;
 
-import com.validly.validator.FailFastValidator;
-import com.validly.validator.Notification;
-import com.validly.validator.ValidationFailureException;
-import com.validly.validator.ValidationPredicate;
+import com.validly.validator.*;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -174,7 +171,31 @@ public class CustomerScenarioTest {
                 .must(i -> i.isBefore(Instant.now().plus(3, ChronoUnit.DAYS)), "AAA");
 
         print(note);
+    }
 
+    @Test
+    public void testWhenWithString() throws Exception {
+        String value = "salu";
+
+        Notification note = new Notification();
+
+        field("field", value, note)
+                .mustNotBeNull()
+                .when(true, ValidationPredicate.must(s -> s.startsWith("v"), "must start with"))
+                .must(s1 -> s1.length() > 5);
+
+        print(note);
+
+    }
+
+    @Test(expected = ValidationFailureException.class)
+    public void testWhenWithStringFailFast() throws Exception {
+        String value = "valu";
+
+        FailFastValidator.field(value)
+                .mustNotBeNull()
+                .when(true, ValidationPredicate.must(s -> s.startsWith("v"), "must start with"))
+                .must(s1 -> s1.length() > 5);
     }
 
     private void print(Notification note) {
