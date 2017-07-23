@@ -37,6 +37,21 @@ public class FieldValidator<T, FV extends FieldValidator> {
         return new PreCondition<>(fieldValidator);
     }
 
+    //TODO how to support any object with just must() perdiate?
+    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, List<String> note) {
+        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
+        return new PreCondition<>(fieldValidator);
+    }
+
+    public FV mustFatally(Predicate<T> predicate, String message) {
+        if (!ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value)) {
+            stopValidation = true;
+            markAsFailed(message);
+        }
+        return (FV) this;
+    }
+
+
     public FV must(Predicate<T> predicate, String message) {
         if (!ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value)) {
             markAsFailed(message);
@@ -133,8 +148,9 @@ public class FieldValidator<T, FV extends FieldValidator> {
         this.failOnFirst = failOnFirst;
     }
 
-    private void setStopValidation(boolean stopValidation) {
+    protected void setStopValidation(boolean stopValidation) {
         this.stopValidation = stopValidation;
     }
+
 
 }

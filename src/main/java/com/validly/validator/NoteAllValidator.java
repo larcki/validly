@@ -1,6 +1,5 @@
 package com.validly.validator;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class NoteAllValidator <T> extends FieldValidator<T, NoteAllValidator> {
@@ -38,17 +37,4 @@ public class NoteAllValidator <T> extends FieldValidator<T, NoteAllValidator> {
         return new IntegerPreCondition(validator);
     }
 
-
-    // LOCAL DATE
-    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Notification note) {
-        FieldValidator<LocalDate, FieldValidator> validator = new FieldValidator<>(fieldName, value, note);
-        validator.setFailOnFirst(false);
-        return new PreCondition<>(validator);
-    }
-    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, List<String> note) {
-        FieldValidator<LocalDate, FieldValidator> validator = new FieldValidator<>(fieldName, value, note);
-        validator.setFailOnFirst(false);
-        return new PreCondition<>(validator);
-    }
-    
 }

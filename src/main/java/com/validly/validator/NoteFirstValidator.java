@@ -1,18 +1,16 @@
 package com.validly.validator;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class NoteFirstValidator <T> extends FieldValidator<T, NoteFirstValidator> {
 
-    protected NoteFirstValidator(String fieldName, T value, Notification note) {
+    private NoteFirstValidator(String fieldName, T value, Notification note) {
         super(fieldName, value, note);
     }
 
-    protected NoteFirstValidator(String fieldName, T value, List<String> note) {
+    private NoteFirstValidator(String fieldName, T value, List<String> note) {
         super(fieldName, value, note);
     }
-
 
     // STRING
     public static StringPreCondition field(String fieldName, String value, Notification note) {
@@ -37,19 +35,6 @@ public class NoteFirstValidator <T> extends FieldValidator<T, NoteFirstValidator
         IntegerFieldValidator validator = new IntegerFieldValidator(fieldName, value, note);
         validator.setFailOnFirst(true);
         return new IntegerPreCondition(validator);
-    }
-
-
-    // LOCAL DATE
-    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, Notification note) {
-        FieldValidator<LocalDate, FieldValidator> validator = new FieldValidator<>(fieldName, value, note);
-        validator.setFailOnFirst(true);
-        return new PreCondition<>(validator);
-    }
-    public static PreCondition<LocalDate, FieldValidator> field(String fieldName, LocalDate value, List<String> note) {
-        FieldValidator<LocalDate, FieldValidator> validator = new FieldValidator<>(fieldName, value, note);
-        validator.setFailOnFirst(true);
-        return new PreCondition<>(validator);
     }
 
 }

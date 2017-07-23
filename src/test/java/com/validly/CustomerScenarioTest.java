@@ -5,6 +5,7 @@ import com.validly.validator.Notification;
 import com.validly.validator.ValidationFailureException;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class CustomerScenarioTest {
 
     @Test
     public void testDateString() throws Exception {
-        String date = "12.12.xxx";
+        String date = "12.12.2014";
 
         Notification note = new Notification();
 
@@ -75,6 +76,7 @@ public class CustomerScenarioTest {
                 .mustNotBeNull()
                 .must(localDate -> localDate.isAfter(LocalDate.now()));
 
+        print(note);
     }
 
     @Test
@@ -153,6 +155,23 @@ public class CustomerScenarioTest {
         FailFastValidator.field(customer.getSsn())
                 .mustNotBeNullWhen(customer.getAge() > 18)
                 .lengthMustNotExceed(10);
+
+    }
+
+    @Test
+    public void testCustomClass() throws Exception {
+        Instant instant = Instant.now();
+//        Instant instant = null;
+
+        List<String> note = new ArrayList<>();
+        //TODO: first must does not return proper type
+
+        field("fieldName", instant, note)
+            .mustNotBeNull()
+            .must(i -> i.isAfter(Instant.now()))
+            .must(o -> o.equals(o));
+
+        print(note);
 
     }
 
