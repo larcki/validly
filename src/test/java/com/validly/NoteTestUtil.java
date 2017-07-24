@@ -17,6 +17,7 @@ public class NoteTestUtil {
     }
 
     static <T> void failure(T value, BiConsumer<T, List<String>> rule, String... expectedMessage) {
+        //TODO notification object
         List<String> note = new ArrayList<>();
         rule.accept(value, note);
         assertEquals(Arrays.asList(expectedMessage), note);

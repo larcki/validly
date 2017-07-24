@@ -33,10 +33,12 @@ public class NoteAllValidator {
     // GENERIC
     public static <T> PreCondition<T, ValidationEngine> field(String fieldName, T value, Notification note) {
         ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(fieldName, value, note);
+        validationEngine.setFailOnFirst(false);
         return new PreCondition<>(validationEngine);
     }
     public static <T> PreCondition<T, ValidationEngine> field(T value, List<String> note) {
         ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(value, note);
+        validationEngine.setFailOnFirst(false);
         return new PreCondition<>(validationEngine);
     }
 
