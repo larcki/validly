@@ -1,5 +1,6 @@
 package com.validly;
 
+import com.validly.excpetion.ValidationFailureException;
 import org.junit.Assert;
 import org.junit.Test;
 

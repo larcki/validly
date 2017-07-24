@@ -1,6 +1,6 @@
 package com.validly;
 
-import com.validly.validator.*;
+import com.validly.excpetion.ValidationFailureException;
 import org.junit.Test;
 
 import java.time.Instant;

@@ -1,5 +1,7 @@
 package com.validly;
 
+import com.validly.excpetion.ValidationFailureException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
