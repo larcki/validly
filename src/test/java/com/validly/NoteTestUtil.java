@@ -1,6 +1,6 @@
 package com.validly;
 
-import com.validly.validator.Notification;
+import com.validly.validator.ValidlyNote;
 import com.validly.validator.NotificationImpl;
 
 import java.util.ArrayList;
@@ -25,14 +25,14 @@ public class NoteTestUtil {
         assertEquals(Arrays.asList(expectedMessage), note);
     }
 
-    static <T> void successWithNote(T value, BiConsumer<T, Notification> rule) {
-        Notification note = new NotificationImpl();
+    static <T> void successWithNote(T value, BiConsumer<T, ValidlyNote> rule) {
+        ValidlyNote note = new NotificationImpl();
         rule.accept(value, note);
         assertTrue("Expected empty note", note.getMessages().isEmpty());
     }
 
-    static <T> void failureWithNote(T value, BiConsumer<T, Notification> rule, Notification expectedNote) {
-        Notification actualNote = new NotificationImpl();
+    static <T> void failureWithNote(T value, BiConsumer<T, ValidlyNote> rule, ValidlyNote expectedNote) {
+        ValidlyNote actualNote = new NotificationImpl();
         rule.accept(value, actualNote);
         assertEquals(expectedNote, actualNote);
     }

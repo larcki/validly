@@ -9,7 +9,7 @@ public final class ValidationEngineString extends ValidationEngine<String, Valid
         super(value);
     }
 
-    protected ValidationEngineString(String fieldName, String value, Notification note) {
+    protected ValidationEngineString(String fieldName, String value, ValidlyNote note) {
         super(fieldName, value, note);
     }
 

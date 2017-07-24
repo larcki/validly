@@ -1,6 +1,6 @@
 package com.validly;
 
-import com.validly.validator.Notification;
+import com.validly.validator.ValidlyNote;
 import com.validly.validator.NotificationImpl;
 import com.validly.validator.Then;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class NoteAllModeTest {
 
     @Test
     public void testStringBasics_usingNoteObject() throws Exception {
-        BiConsumer<String, Notification> rule = (value, note) -> field("identifier", value, note)
+        BiConsumer<String, ValidlyNote> rule = (value, note) -> field("identifier", value, note)
                 .mustNotBeBlank()
                 .lengthMustBeAtLeast(2)
                 .lengthMustNotExceed(3);
@@ -73,10 +73,10 @@ public class NoteAllModeTest {
         failureWithNote("", rule, note("identifier", "mustNotBeBlank"));
     }
 
-    private Notification note(String identifier, String... messages) {
-        Notification notification = new NotificationImpl();
-        Arrays.asList(messages).forEach(s -> notification.addMessage(identifier, s));
-        return notification;
+    private ValidlyNote note(String identifier, String... messages) {
+        ValidlyNote validlyNote = new NotificationImpl();
+        Arrays.asList(messages).forEach(s -> validlyNote.addMessage(identifier, s));
+        return validlyNote;
     }
 
     @Test

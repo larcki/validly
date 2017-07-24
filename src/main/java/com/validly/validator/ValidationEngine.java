@@ -9,13 +9,13 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
 
     private final String fieldName;
     private final T value;
-    private final Notification note;
+    private final ValidlyNote note;
     private boolean stopValidation;
     private boolean nullIsValid;
     private boolean ignore;
     private boolean failOnFirst;
 
-    protected ValidationEngine(String fieldName, T value, Notification note) {
+    protected ValidationEngine(String fieldName, T value, ValidlyNote note) {
         this.fieldName = fieldName;
         this.value = value;
         this.note = note;

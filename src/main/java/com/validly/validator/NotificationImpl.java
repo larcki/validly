@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NotificationImpl implements Notification {
+public class NotificationImpl implements ValidlyNote {
 
     protected final Map<String, List<String>> fieldMessages;
 

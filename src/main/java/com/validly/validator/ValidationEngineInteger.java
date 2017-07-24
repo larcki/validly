@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 public final class ValidationEngineInteger extends ValidationEngine<Integer, ValidationEngineInteger> {
 
-    protected ValidationEngineInteger(String fieldName, Integer value, Notification note) {
+    protected ValidationEngineInteger(String fieldName, Integer value, ValidlyNote note) {
         super(fieldName, value, note);
     }
 

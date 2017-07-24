@@ -3,7 +3,7 @@ package com.validly.validator;
 import java.util.List;
 import java.util.Map;
 
-public interface Notification {
+public interface ValidlyNote {
 
     void addMessage(String fieldName, String message);
 

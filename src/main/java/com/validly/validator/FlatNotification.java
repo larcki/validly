@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class FlatNotification implements Notification {
+class FlatNotification implements ValidlyNote {
 
     private List<String> messages;
 
