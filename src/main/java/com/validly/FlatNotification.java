@@ -1,4 +1,4 @@
-package com.validly.validator;
+package com.validly;
 
 import java.util.ArrayList;
 import java.util.List;

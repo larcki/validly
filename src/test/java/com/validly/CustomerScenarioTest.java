@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.validly.validator.NoteFirstValidator.field;
+import static com.validly.NoteFirstValidator.field;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class CustomerScenarioTest {
@@ -23,7 +23,7 @@ public class CustomerScenarioTest {
         customer.setReferralCode("REF.111122223333");
         customer.setSsn("tooLongValue");
 
-        NotificationImpl note = new NotificationImpl();
+        Notification note = new Notification();
 
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeBlank()
@@ -55,7 +55,7 @@ public class CustomerScenarioTest {
     public void testDateString() throws Exception {
         String date = "12.12.2014";
 
-        NotificationImpl note = new NotificationImpl();
+        Notification note = new Notification();
 
         field("date", date, note)
                 .mustNotBeNull()
@@ -69,7 +69,7 @@ public class CustomerScenarioTest {
     public void testDate() throws Exception {
         LocalDate date = LocalDate.of(2016, 12, 3);
 
-        NotificationImpl note = new NotificationImpl();
+        Notification note = new Notification();
 
         field("", date, note)
                 .mustNotBeNull()
@@ -85,7 +85,7 @@ public class CustomerScenarioTest {
         Address address = new Address();
         address.setPostCode("");
 
-        NotificationImpl note = new NotificationImpl();
+        Notification note = new Notification();
 
         field("postCode", address.getPostCode(), note)
                 .mustNotBeNull()
@@ -177,7 +177,7 @@ public class CustomerScenarioTest {
     public void testWhenWithString() throws Exception {
         String value = "salu";
 
-        NotificationImpl note = new NotificationImpl();
+        Notification note = new Notification();
 
         field("field", value, note)
                 .mustNotBeNull()
@@ -198,7 +198,7 @@ public class CustomerScenarioTest {
                 .must(s1 -> s1.length() > 5);
     }
 
-    private void print(NotificationImpl note) {
+    private void print(Notification note) {
         if (note.isNotEmpty()) {
             note.getMessages().forEach((field, reason) -> System.out.println(field + ": " + reason));
         }

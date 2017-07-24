@@ -1,8 +1,5 @@
 package com.validly;
 
-import com.validly.validator.ValidlyNote;
-import com.validly.validator.NotificationImpl;
-import com.validly.validator.Then;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -10,7 +7,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.validly.NoteTestUtil.*;
-import static com.validly.validator.NoteAllValidator.field;
+import static com.validly.NoteAllValidator.field;
 
 public class NoteAllModeTest {
 
@@ -74,7 +71,7 @@ public class NoteAllModeTest {
     }
 
     private ValidlyNote note(String identifier, String... messages) {
-        ValidlyNote validlyNote = new NotificationImpl();
+        ValidlyNote validlyNote = new Notification();
         Arrays.asList(messages).forEach(s -> validlyNote.addMessage(identifier, s));
         return validlyNote;
     }

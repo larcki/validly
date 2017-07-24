@@ -1,13 +1,11 @@
 package com.validly;
 
-import com.validly.validator.ValidationFailureException;
-import com.validly.validator.Then;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.function.Consumer;
 
-import static com.validly.validator.FailFastValidator.field;
+import static com.validly.FailFastValidator.field;
 import static org.junit.Assert.assertTrue;
 
 public class FailFastModeTest {

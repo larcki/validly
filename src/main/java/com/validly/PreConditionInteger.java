@@ -1,4 +1,4 @@
-package com.validly.validator;
+package com.validly;
 
 public class PreConditionInteger extends PreCondition<Integer, ValidationEngineInteger> {
 

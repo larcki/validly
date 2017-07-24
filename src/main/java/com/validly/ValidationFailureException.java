@@ -1,4 +1,4 @@
-package com.validly.validator;
+package com.validly;
 
 public class ValidationFailureException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.validly.validator;
+package com.validly;
 
 import java.util.List;
 import java.util.Map;

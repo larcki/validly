@@ -1,6 +1,5 @@
 package com.validly;
 
-import com.validly.validator.Then;
 import org.junit.Test;
 
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.function.BiConsumer;
 
 import static com.validly.NoteTestUtil.failure;
 import static com.validly.NoteTestUtil.success;
-import static com.validly.validator.NoteFirstValidator.field;
+import static com.validly.NoteFirstValidator.field;
 
 public class NoteFirstModeTest {
 
