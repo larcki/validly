@@ -1,8 +1,8 @@
 package com.validly.validator;
 
-public final class StringPreCondition extends PreCondition<String, StringFieldValidator> {
+public final class PreConditionString extends PreCondition<String, StringFieldValidator> {
 
-    public StringPreCondition(FieldValidator<String, StringFieldValidator> fieldValidator) {
+    public PreConditionString(FieldValidator<String, StringFieldValidator> fieldValidator) {
         super(fieldValidator);
     }
 
@@ -28,7 +28,7 @@ public final class StringPreCondition extends PreCondition<String, StringFieldVa
     }
 
     @Override
-    public StringPreCondition validateWhen(boolean validate) {
-        return (StringPreCondition) super.validateWhen(validate);
+    public PreConditionString validateWhen(boolean validate) {
+        return (PreConditionString) super.validateWhen(validate);
     }
 }

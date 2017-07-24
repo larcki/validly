@@ -1,8 +1,8 @@
 package com.validly.validator;
 
-public class IntegerPreCondition extends PreCondition<Integer, IntegerFieldValidator> {
+public class PreConditionInteger extends PreCondition<Integer, IntegerFieldValidator> {
 
-    public IntegerPreCondition(FieldValidator<Integer, IntegerFieldValidator> fieldValidator) {
+    public PreConditionInteger(FieldValidator<Integer, IntegerFieldValidator> fieldValidator) {
         super(fieldValidator);
     }
 
@@ -22,7 +22,7 @@ public class IntegerPreCondition extends PreCondition<Integer, IntegerFieldValid
     }
 
     @Override
-    public IntegerPreCondition validateWhen(boolean validate) {
-        return (IntegerPreCondition) super.validateWhen(validate);
+    public PreConditionInteger validateWhen(boolean validate) {
+        return (PreConditionInteger) super.validateWhen(validate);
     }
 }

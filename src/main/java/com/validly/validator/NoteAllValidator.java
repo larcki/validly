@@ -5,28 +5,28 @@ import java.util.List;
 public class NoteAllValidator {
 
     // STRING
-    public static StringPreCondition field(String fieldName, String value, Notification note) {
+    public static PreConditionString field(String fieldName, String value, Notification note) {
         StringFieldValidator validator = new StringFieldValidator(fieldName, value, note);
         validator.setFailOnFirst(false);
-        return new StringPreCondition(validator);
+        return new PreConditionString(validator);
     }
-    public static StringPreCondition field(String value, List<String> note) {
+    public static PreConditionString field(String value, List<String> note) {
         StringFieldValidator validator = new StringFieldValidator(value, note);
         validator.setFailOnFirst(false);
-        return new StringPreCondition(validator);
+        return new PreConditionString(validator);
     }
 
 
     // INTEGER
-    public static IntegerPreCondition field(String fieldName, Integer value, Notification note) {
+    public static PreConditionInteger field(String fieldName, Integer value, Notification note) {
         IntegerFieldValidator validator = new IntegerFieldValidator(fieldName, value, note);
         validator.setFailOnFirst(false);
-        return new IntegerPreCondition(validator);
+        return new PreConditionInteger(validator);
     }
-    public static IntegerPreCondition field(Integer value, List<String> note) {
+    public static PreConditionInteger field(Integer value, List<String> note) {
         IntegerFieldValidator validator = new IntegerFieldValidator(value, note);
         validator.setFailOnFirst(false);
-        return new IntegerPreCondition(validator);
+        return new PreConditionInteger(validator);
     }
 
 
