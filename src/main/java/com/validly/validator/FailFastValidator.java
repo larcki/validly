@@ -3,13 +3,13 @@ package com.validly.validator;
 public class FailFastValidator {
 
     public static PreConditionString field(String value) {
-        StringFieldValidator stringFieldValidator = new StringFieldValidator(value);
-        return new PreConditionString(stringFieldValidator);
+        ValidationEngineString validationEngineString = new ValidationEngineString(value);
+        return new PreConditionString(validationEngineString);
     }
 
     public static PreConditionInteger field(Integer value) {
-        IntegerFieldValidator integerFieldValidator = new IntegerFieldValidator(value);
-        return new PreConditionInteger(integerFieldValidator);
+        ValidationEngineInteger validationEngineInteger = new ValidationEngineInteger(value);
+        return new PreConditionInteger(validationEngineInteger);
     }
 
     public static <T> PreCondition<T, FieldValidator> field(T value) {

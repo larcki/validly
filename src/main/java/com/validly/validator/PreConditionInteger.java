@@ -1,24 +1,24 @@
 package com.validly.validator;
 
-public class PreConditionInteger extends PreCondition<Integer, IntegerFieldValidator> {
+public class PreConditionInteger extends PreCondition<Integer, ValidationEngineInteger> {
 
-    public PreConditionInteger(FieldValidator<Integer, IntegerFieldValidator> fieldValidator) {
+    public PreConditionInteger(FieldValidator<Integer, ValidationEngineInteger> fieldValidator) {
         super(fieldValidator);
     }
 
     @Override
-    public IntegerFieldValidator mustNotBeNull() {
-        return (IntegerFieldValidator) super.mustNotBeNull();
+    public ValidationEngineInteger mustNotBeNull() {
+        return (ValidationEngineInteger) super.mustNotBeNull();
     }
 
     @Override
-    public IntegerFieldValidator mustNotBeNullWhen(boolean value) {
-        return (IntegerFieldValidator) super.mustNotBeNullWhen(value);
+    public ValidationEngineInteger mustNotBeNullWhen(boolean value) {
+        return (ValidationEngineInteger) super.mustNotBeNullWhen(value);
     }
 
     @Override
-    public IntegerFieldValidator canBeNull() {
-        return (IntegerFieldValidator) super.canBeNull();
+    public ValidationEngineInteger canBeNull() {
+        return (ValidationEngineInteger) super.canBeNull();
     }
 
     @Override

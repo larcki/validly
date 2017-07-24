@@ -1,30 +1,30 @@
 package com.validly.validator;
 
-public final class PreConditionString extends PreCondition<String, StringFieldValidator> {
+public final class PreConditionString extends PreCondition<String, ValidationEngineString> {
 
-    public PreConditionString(FieldValidator<String, StringFieldValidator> fieldValidator) {
+    public PreConditionString(FieldValidator<String, ValidationEngineString> fieldValidator) {
         super(fieldValidator);
     }
 
-    public StringFieldValidator mustNotBeBlank() {
+    public ValidationEngineString mustNotBeBlank() {
         this.fieldValidator.setNullIsValid(false);
         this.fieldValidator.mustFatally(ValidationRules.isNotBlank(), "mustNotBeBlank");
-        return (StringFieldValidator) this.fieldValidator;
+        return (ValidationEngineString) this.fieldValidator;
     }
 
     @Override
-    public StringFieldValidator mustNotBeNull() {
-        return (StringFieldValidator) super.mustNotBeNull();
+    public ValidationEngineString mustNotBeNull() {
+        return (ValidationEngineString) super.mustNotBeNull();
     }
 
     @Override
-    public StringFieldValidator mustNotBeNullWhen(boolean value) {
-        return (StringFieldValidator) super.mustNotBeNullWhen(value);
+    public ValidationEngineString mustNotBeNullWhen(boolean value) {
+        return (ValidationEngineString) super.mustNotBeNullWhen(value);
     }
 
     @Override
-    public StringFieldValidator canBeNull() {
-        return (StringFieldValidator) super.canBeNull();
+    public ValidationEngineString canBeNull() {
+        return (ValidationEngineString) super.canBeNull();
     }
 
     @Override

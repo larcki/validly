@@ -6,12 +6,12 @@ public class NoteFirstValidator {
 
     // STRING
     public static PreConditionString field(String fieldName, String value, Notification note) {
-        StringFieldValidator validator = new StringFieldValidator(fieldName, value, note);
+        ValidationEngineString validator = new ValidationEngineString(fieldName, value, note);
         validator.setFailOnFirst(true);
         return new PreConditionString(validator);
     }
     public static PreConditionString field(String value, List<String> note) {
-        StringFieldValidator validator = new StringFieldValidator(value, note);
+        ValidationEngineString validator = new ValidationEngineString(value, note);
         validator.setFailOnFirst(true);
         return new PreConditionString(validator);
     }
@@ -19,12 +19,12 @@ public class NoteFirstValidator {
 
     // INTEGER
     public static PreConditionInteger field(String fieldName, Integer value, Notification note) {
-        IntegerFieldValidator validator = new IntegerFieldValidator(fieldName, value, note);
+        ValidationEngineInteger validator = new ValidationEngineInteger(fieldName, value, note);
         validator.setFailOnFirst(true);
         return new PreConditionInteger(validator);
     }
     public static PreConditionInteger field(Integer value, List<String> note) {
-        IntegerFieldValidator validator = new IntegerFieldValidator(value, note);
+        ValidationEngineInteger validator = new ValidationEngineInteger(value, note);
         validator.setFailOnFirst(true);
         return new PreConditionInteger(validator);
     }
