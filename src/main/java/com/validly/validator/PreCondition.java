@@ -2,26 +2,26 @@ package com.validly.validator;
 
 import java.util.Objects;
 
-public class PreCondition<T, FV extends FieldValidator> {
+public class PreCondition<T, FV extends ValidationEngine> {
 
-    protected final FieldValidator<T, FV> fieldValidator;
+    protected final ValidationEngine<T, FV> validationEngine;
 
-    PreCondition(FieldValidator<T, FV> fieldValidator) {
-        this.fieldValidator = fieldValidator;
+    PreCondition(ValidationEngine<T, FV> validationEngine) {
+        this.validationEngine = validationEngine;
     }
 
-    public FieldValidator<T, ? extends FieldValidator> mustNotBeNull() {
-        this.fieldValidator.setNullIsValid(false);
-        this.fieldValidator.mustFatally(Objects::nonNull, "mustNotBeNull");
-        return this.fieldValidator;
+    public ValidationEngine<T, ? extends ValidationEngine> mustNotBeNull() {
+        this.validationEngine.setNullIsValid(false);
+        this.validationEngine.mustFatally(Objects::nonNull, "mustNotBeNull");
+        return this.validationEngine;
     }
 
-    public FieldValidator<T, ? extends FieldValidator> canBeNull() {
-        this.fieldValidator.setNullIsValid(true);
-        return this.fieldValidator;
+    public ValidationEngine<T, ? extends ValidationEngine> canBeNull() {
+        this.validationEngine.setNullIsValid(true);
+        return this.validationEngine;
     }
 
-    public FieldValidator<T, ? extends FieldValidator> mustNotBeNullWhen(boolean mustNotBeNull) {
+    public ValidationEngine<T, ? extends ValidationEngine> mustNotBeNullWhen(boolean mustNotBeNull) {
         if (mustNotBeNull) {
             return mustNotBeNull();
         } else {
@@ -29,8 +29,8 @@ public class PreCondition<T, FV extends FieldValidator> {
         }
     }
 
-    public PreCondition<T, ? extends FieldValidator> validateWhen(boolean validate) {
-        this.fieldValidator.setIgnore(!validate);
+    public PreCondition<T, ? extends ValidationEngine> validateWhen(boolean validate) {
+        this.validationEngine.setIgnore(!validate);
         return this;
     }
 

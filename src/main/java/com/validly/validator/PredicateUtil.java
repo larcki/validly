@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-class ValidationRules {
+class PredicateUtil {
 
     static Predicate<String> isNotEmpty() {
         return (v) -> !isEmptyString(v);

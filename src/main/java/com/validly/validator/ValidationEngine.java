@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class FieldValidator<T, FV extends FieldValidator> {
+public class ValidationEngine<T, FV extends ValidationEngine> {
 
     private final String fieldName;
     private final T value;
@@ -15,34 +15,34 @@ public class FieldValidator<T, FV extends FieldValidator> {
     private boolean ignore;
     private boolean failOnFirst;
 
-    protected FieldValidator(String fieldName, T value, Notification note) {
+    protected ValidationEngine(String fieldName, T value, Notification note) {
         this.fieldName = fieldName;
         this.value = value;
         this.note = note;
     }
 
-    protected FieldValidator(T value, List<String> note) {
+    protected ValidationEngine(T value, List<String> note) {
         this(null, value, new FlatNotification(note));
     }
 
-    protected FieldValidator(T value) {
+    protected ValidationEngine(T value) {
         this.fieldName = null;
         this.value = value;
         this.note = null;
     }
 
-    public FieldValidator<T, FV> must(Predicate<T> predicate) {
+    public ValidationEngine<T, FV> must(Predicate<T> predicate) {
         return must(predicate, "customMustCondition");
     }
 
-    public FieldValidator<T, FV> must(Predicate<T> predicate, String message) {
+    public ValidationEngine<T, FV> must(Predicate<T> predicate, String message) {
         if (checkFailure(predicate)) {
             markAsFailed(message);
         }
         return this;
     }
 
-    public FieldValidator<T, FV> mustFatally(Predicate<T> predicate, String message) {
+    public ValidationEngine<T, FV> mustFatally(Predicate<T> predicate, String message) {
         if (checkFailure(predicate)) {
             stopValidation = true;
             markAsFailed(message);
@@ -66,29 +66,29 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
 
     @SafeVarargs
-    public final FieldValidator<T, FV> when(Predicate<T> predicate, Then<T>... thenPredicates) {
+    public final ValidationEngine<T, FV> when(Predicate<T> predicate, Then<T>... thenPredicates) {
         return thenValidation(!stopValidation && predicate.test(value), thenPredicates);
     }
 
     @SafeVarargs
-    public final FieldValidator<T, FV> when(boolean value, Then<T>... thenPredicates) {
+    public final ValidationEngine<T, FV> when(boolean value, Then<T>... thenPredicates) {
         return thenValidation(value, thenPredicates);
     }
 
     @SafeVarargs
-    private final FieldValidator<T, FV> thenValidation(boolean whenConditionResult, Then<T>... thenPredicates) {
+    private final ValidationEngine<T, FV> thenValidation(boolean whenConditionResult, Then<T>... thenPredicates) {
         if (whenConditionResult) {
             Arrays.stream(thenPredicates)
                     .forEach(p -> must(p.getPredicate(), p.getMessage()));
         }
-        return FieldValidator.this;
+        return ValidationEngine.this;
     }
 
-    public <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> mustConvert(Function<T, NEW_TYPE> conversionFunction) {
+    public <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> mustConvert(Function<T, NEW_TYPE> conversionFunction) {
         return mustConvert(conversionFunction, "mustConvert");
     }
 
-    public <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> mustConvert(Function<T, NEW_TYPE> conversionFunction, String message) {
+    public <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> mustConvert(Function<T, NEW_TYPE> conversionFunction, String message) {
         NEW_TYPE convertedValue = null;
         try {
             if (!stopValidation) {
@@ -125,8 +125,8 @@ public class FieldValidator<T, FV extends FieldValidator> {
 //        return newValidator;
 //    }
 
-    private <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> copyValidator(NEW_TYPE value) {
-        FieldValidator<NEW_TYPE, FieldValidator> newValidator = new FieldValidator<>(fieldName, value, note);
+    private <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> copyValidator(NEW_TYPE value) {
+        ValidationEngine<NEW_TYPE, ValidationEngine> newValidator = new ValidationEngine<>(fieldName, value, note);
         newValidator.setIgnore(ignore);
         newValidator.setNullIsValid(nullIsValid);
         newValidator.setStopValidation(stopValidation);

@@ -2,14 +2,14 @@ package com.validly.validator;
 
 public final class PreConditionString extends PreCondition<String, ValidationEngineString> {
 
-    public PreConditionString(FieldValidator<String, ValidationEngineString> fieldValidator) {
-        super(fieldValidator);
+    public PreConditionString(ValidationEngine<String, ValidationEngineString> validationEngine) {
+        super(validationEngine);
     }
 
     public ValidationEngineString mustNotBeBlank() {
-        this.fieldValidator.setNullIsValid(false);
-        this.fieldValidator.mustFatally(ValidationRules.isNotBlank(), "mustNotBeBlank");
-        return (ValidationEngineString) this.fieldValidator;
+        this.validationEngine.setNullIsValid(false);
+        this.validationEngine.mustFatally(PredicateUtil.isNotBlank(), "mustNotBeBlank");
+        return (ValidationEngineString) this.validationEngine;
     }
 
     @Override

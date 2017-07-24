@@ -3,7 +3,7 @@ package com.validly.validator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public final class ValidationEngineInteger extends FieldValidator<Integer, ValidationEngineInteger> {
+public final class ValidationEngineInteger extends ValidationEngine<Integer, ValidationEngineInteger> {
 
     protected ValidationEngineInteger(String fieldName, Integer value, Notification note) {
         super(fieldName, value, note);
@@ -18,16 +18,16 @@ public final class ValidationEngineInteger extends FieldValidator<Integer, Valid
     }
 
     public ValidationEngineInteger valueMustBeAtLeast(int min) {
-        return must(ValidationRules.minValue(min), "valueMustBeAtLeast");
+        return must(PredicateUtil.minValue(min), "valueMustBeAtLeast");
     }
 
     public ValidationEngineInteger valueMustNotExceed(int min) {
-        return must(ValidationRules.maxValue(min), "valueMustNotExceed");
+        return must(PredicateUtil.maxValue(min), "valueMustNotExceed");
     }
 
     public ValidationEngineInteger valueMustBeWithin(int min, int max) {
-        return must(ValidationRules.minValue(min)
-                .and(ValidationRules.maxValue(max)), "valueMustBeWithin");
+        return must(PredicateUtil.minValue(min)
+                .and(PredicateUtil.maxValue(max)), "valueMustBeWithin");
     }
 
     public ValidationEngineInteger must(Predicate<Integer> predicate, String message) {

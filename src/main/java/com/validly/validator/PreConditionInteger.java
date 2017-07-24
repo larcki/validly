@@ -2,8 +2,8 @@ package com.validly.validator;
 
 public class PreConditionInteger extends PreCondition<Integer, ValidationEngineInteger> {
 
-    public PreConditionInteger(FieldValidator<Integer, ValidationEngineInteger> fieldValidator) {
-        super(fieldValidator);
+    public PreConditionInteger(ValidationEngine<Integer, ValidationEngineInteger> validationEngine) {
+        super(validationEngine);
     }
 
     @Override

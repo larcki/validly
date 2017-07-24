@@ -31,13 +31,13 @@ public class NoteFirstValidator {
 
 
     // GENERIC
-    public static <T> PreCondition<T, FieldValidator> field(String fieldName, T value, Notification note) {
-        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(fieldName, value, note);
-        return new PreCondition<>(fieldValidator);
+    public static <T> PreCondition<T, ValidationEngine> field(String fieldName, T value, Notification note) {
+        ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(fieldName, value, note);
+        return new PreCondition<>(validationEngine);
     }
-    public static <T> PreCondition<T, FieldValidator> field(T value, List<String> note) {
-        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(value, note);
-        return new PreCondition<>(fieldValidator);
+    public static <T> PreCondition<T, ValidationEngine> field(T value, List<String> note) {
+        ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(value, note);
+        return new PreCondition<>(validationEngine);
     }
 
 }

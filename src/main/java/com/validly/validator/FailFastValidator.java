@@ -12,9 +12,9 @@ public class FailFastValidator {
         return new PreConditionInteger(validationEngineInteger);
     }
 
-    public static <T> PreCondition<T, FieldValidator> field(T value) {
-        FieldValidator<T, FieldValidator> fieldValidator = new FieldValidator<>(value);
-        return new PreCondition<>(fieldValidator);
+    public static <T> PreCondition<T, ValidationEngine> field(T value) {
+        ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(value);
+        return new PreCondition<>(validationEngine);
     }
 
 }

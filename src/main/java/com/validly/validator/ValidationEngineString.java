@@ -3,7 +3,7 @@ package com.validly.validator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public final class ValidationEngineString extends FieldValidator<String, ValidationEngineString> {
+public final class ValidationEngineString extends ValidationEngine<String, ValidationEngineString> {
 
     protected ValidationEngineString(String value) {
         super(value);
@@ -18,20 +18,20 @@ public final class ValidationEngineString extends FieldValidator<String, Validat
     }
 
     public ValidationEngineString mustNotBeEmpty() {
-        return must(ValidationRules.isNotEmpty(), "mustNotBeEmpty");
+        return must(PredicateUtil.isNotEmpty(), "mustNotBeEmpty");
     }
 
     public ValidationEngineString lengthMustNotExceed(int max) {
-        return must(ValidationRules.isWithinMax(max), "lengthMustNotExceed");
+        return must(PredicateUtil.isWithinMax(max), "lengthMustNotExceed");
     }
 
     public ValidationEngineString lengthMustBeAtLeast(int min) {
-        return must(ValidationRules.isWithinMin(min), "lengthMustBeAtLeast");
+        return must(PredicateUtil.isWithinMin(min), "lengthMustBeAtLeast");
     }
 
     public ValidationEngineString lengthMustBeWithin(int min, int max) {
-        return must(ValidationRules.isWithinMin(min)
-                .and(ValidationRules.isWithinMax(max)), "lengthMustBeWithin");
+        return must(PredicateUtil.isWithinMin(min)
+                .and(PredicateUtil.isWithinMax(max)), "lengthMustBeWithin");
     }
 
     public ValidationEngineString mustContain(String value) {
