@@ -7,13 +7,12 @@ import java.util.function.BiConsumer;
 
 import static com.validly.NoteTestUtil.failure;
 import static com.validly.NoteTestUtil.success;
-import static com.validly.NoteFirstValidator.field;
 
 public class NoteFirstModeTest {
 
     @Test
     public void testWhen() throws Exception {
-        BiConsumer<String, List<String>> rule = (value, note) -> field(value, note)
+        BiConsumer<String, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
                 .mustNotBeNull("mustNotBeNull")
                 .when(s -> s.startsWith("123"), Then.must(s -> s.endsWith("789"), "must end 789"))
                 .when(s -> s.startsWith("987"), Then.must(s -> s.endsWith("321"), "must end 321"));
@@ -28,7 +27,7 @@ public class NoteFirstModeTest {
 
     @Test
     public void testMust() throws Exception {
-        BiConsumer<String, List<String>> rule = (value, note) -> field(value, note)
+        BiConsumer<String, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
                 .mustNotBeNull("mustNotBeNull")
                 .must(s -> s.startsWith("123"), "must start 123")
                 .must(s -> s.endsWith("999"), "must end 999");
@@ -43,7 +42,7 @@ public class NoteFirstModeTest {
 
     @Test
     public void testStringBasics() throws Exception {
-        BiConsumer<String, List<String>> rule = (value, note) -> field(value, note)
+        BiConsumer<String, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(3, "lengthMustNotExceed");
@@ -57,7 +56,7 @@ public class NoteFirstModeTest {
 
     @Test
     public void testIntegerBasics() throws Exception {
-        BiConsumer<Integer, List<String>> rule = (value, note) -> field(value, note)
+        BiConsumer<Integer, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
                 .mustNotBeNull("mustNotBeNull")
                 .valueMustBeAtLeast(1, "valueMustBeAtLeast")
                 .valueMustNotExceed(10, "valueMustNotExceed");

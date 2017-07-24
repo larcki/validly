@@ -6,14 +6,13 @@ import org.junit.Test;
 
 import java.util.function.Consumer;
 
-import static com.validly.FailFastValidator.field;
 import static org.junit.Assert.assertTrue;
 
 public class FailFastModeTest {
 
     @Test
     public void testWhen() throws Exception {
-        Consumer<String> rule = value -> field(value)
+        Consumer<String> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeNull("mustNotBeNull")
                 .when(s -> s.startsWith("123"), Then.must(s -> s.endsWith("789"), "must end 789"))
                 .when(s -> s.startsWith("987"), Then.must(s -> s.endsWith("321"), "must end 321"));
@@ -28,7 +27,7 @@ public class FailFastModeTest {
 
     @Test
     public void testMust() throws Exception {
-        Consumer<String> rule = value -> field(value)
+        Consumer<String> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeNull("mustNotBeNull")
                 .must(s -> s.startsWith("123"), "must start 123")
                 .must(s -> s.endsWith("999"), "must end 999");
@@ -43,7 +42,7 @@ public class FailFastModeTest {
 
     @Test
     public void testStringBasics() throws Exception {
-        Consumer<String> rule = value -> field(value)
+        Consumer<String> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(3, "lengthMustNotExceed");
@@ -57,7 +56,7 @@ public class FailFastModeTest {
 
     @Test
     public void testIntegerBasics() throws Exception {
-        Consumer<Integer> rule = value -> field(value)
+        Consumer<Integer> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeNull("mustNotBeNull")
                 .valueMustBeAtLeast(1, "valueMustBeAtLeast")
                 .valueMustNotExceed(10, "valueMustNotExceed");
