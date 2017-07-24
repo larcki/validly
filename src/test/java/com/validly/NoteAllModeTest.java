@@ -8,9 +8,9 @@ import java.util.function.BiConsumer;
 
 import static com.validly.NoteTestUtil.failure;
 import static com.validly.NoteTestUtil.success;
-import static com.validly.validator.NoteFirstValidator.field;
+import static com.validly.validator.NoteAllValidator.field;
 
-public class NoteFirstModeTest {
+public class NoteAllModeTest {
 
     @Test
     public void testWhen() throws Exception {
@@ -38,7 +38,7 @@ public class NoteFirstModeTest {
         success("123 999", rule);
         failure("123", rule, "must end 999");
         failure("999", rule, "must start 123");
-        failure("111", rule, "must start 123");
+        failure("111", rule, "must start 123", "must end 999");
         failure(null, rule, "mustNotBeNull");
     }
 
@@ -54,6 +54,22 @@ public class NoteFirstModeTest {
         failure("1", rule, "lengthMustBeAtLeast");
         failure("4444", rule, "lengthMustNotExceed");
         failure("", rule, "mustNotBeBlank");
+    }
+
+    @Test
+    public void testStringAdvanced() throws Exception {
+        BiConsumer<String, List<String>> rule = (value, note) -> field(value, note)
+                .mustNotBeBlank()
+                .lengthMustBeWithin(4, 7)
+                .mustContain("-")
+                .mustStartWith("abc");
+
+        success("abc-x", rule);
+        failure("abc", rule, "lengthMustBeWithin", "mustContain");
+        failure("add", rule, "lengthMustBeWithin", "mustContain", "mustStartWith");
+        failure("abcx", rule, "mustContain");
+        failure("", rule, "mustNotBeBlank");
+        failure(null, rule, "mustNotBeBlank");
     }
 
     @Test
