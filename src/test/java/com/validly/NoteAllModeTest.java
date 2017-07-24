@@ -1,6 +1,6 @@
 package com.validly;
 
-import com.validly.validator.ValidationPredicate;
+import com.validly.validator.Then;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public class NoteAllModeTest {
     public void testWhen() throws Exception {
         BiConsumer<String, List<String>> rule = (value, note) -> field(value, note)
                 .mustNotBeNull()
-                .when(s -> s.startsWith("123"), ValidationPredicate.must(s -> s.endsWith("789"), "must end 789"))
-                .when(s -> s.startsWith("987"), ValidationPredicate.must(s -> s.endsWith("321"), "must end 321"));
+                .when(s -> s.startsWith("123"), Then.must(s -> s.endsWith("789"), "must end 789"))
+                .when(s -> s.startsWith("987"), Then.must(s -> s.endsWith("321"), "must end 321"));
 
         success("123 789", rule);
         success("987 321", rule);

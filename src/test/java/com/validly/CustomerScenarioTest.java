@@ -74,7 +74,7 @@ public class CustomerScenarioTest {
         field("", date, note)
                 .mustNotBeNull()
                 .when(localDate -> localDate.isBefore(LocalDate.now()),
-                        ValidationPredicate.must(LocalDate::isLeapYear, "must be leap year when in the past"))
+                        Then.must(LocalDate::isLeapYear, "must be leap year when in the past"))
                 .must(localDate -> localDate.getDayOfMonth() == 3, "must be 3 day of month");
 
         print(note);
@@ -181,7 +181,7 @@ public class CustomerScenarioTest {
 
         field("field", value, note)
                 .mustNotBeNull()
-                .when(true, ValidationPredicate.must(s -> s.startsWith("v"), "must start with"))
+                .when(true, Then.must(s -> s.startsWith("v"), "must start with"))
                 .must(s1 -> s1.length() > 5);
 
         print(note);
@@ -194,7 +194,7 @@ public class CustomerScenarioTest {
 
         FailFastValidator.field(value)
                 .mustNotBeNull()
-                .when(true, ValidationPredicate.must(s -> s.startsWith("v"), "must start with"))
+                .when(true, Then.must(s -> s.startsWith("v"), "must start with"))
                 .must(s1 -> s1.length() > 5);
     }
 

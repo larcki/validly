@@ -66,17 +66,17 @@ public class FieldValidator<T, FV extends FieldValidator> {
 
 
     @SafeVarargs
-    public final FieldValidator<T, FV> when(Predicate<T> predicate, ValidationPredicate<T>... thenPredicates) {
+    public final FieldValidator<T, FV> when(Predicate<T> predicate, Then<T>... thenPredicates) {
         return thenValidation(!stopValidation && predicate.test(value), thenPredicates);
     }
 
     @SafeVarargs
-    public final FieldValidator<T, FV> when(boolean value, ValidationPredicate<T>... thenPredicates) {
+    public final FieldValidator<T, FV> when(boolean value, Then<T>... thenPredicates) {
         return thenValidation(value, thenPredicates);
     }
 
     @SafeVarargs
-    private final FieldValidator<T, FV> thenValidation(boolean whenConditionResult, ValidationPredicate<T>... thenPredicates) {
+    private final FieldValidator<T, FV> thenValidation(boolean whenConditionResult, Then<T>... thenPredicates) {
         if (whenConditionResult) {
             Arrays.stream(thenPredicates)
                     .forEach(p -> must(p.getPredicate(), p.getMessage()));
