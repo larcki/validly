@@ -2,7 +2,7 @@ package com.validly;
 
 public class PreConditionInteger extends PreCondition<Integer, ValidationEngineInteger> {
 
-    public PreConditionInteger(ValidationEngine<Integer, ValidationEngineInteger> validationEngine) {
+    PreConditionInteger(ValidationEngine<Integer, ValidationEngineInteger> validationEngine) {
         super(validationEngine);
     }
 
