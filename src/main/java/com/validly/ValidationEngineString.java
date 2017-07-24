@@ -17,29 +17,25 @@ public final class ValidationEngineString extends ValidationEngine<String, Valid
         super(value, note);
     }
 
-    public ValidationEngineString mustNotBeEmpty() {
-        return must(PredicateUtil.isNotEmpty(), "mustNotBeEmpty");
+    public ValidationEngineString lengthMustNotExceed(int max, String message) {
+        return must(PredicateUtil.isWithinMax(max), message);
     }
 
-    public ValidationEngineString lengthMustNotExceed(int max) {
-        return must(PredicateUtil.isWithinMax(max), "lengthMustNotExceed");
+    public ValidationEngineString lengthMustBeAtLeast(int min, String message) {
+        return must(PredicateUtil.isWithinMin(min), message);
     }
 
-    public ValidationEngineString lengthMustBeAtLeast(int min) {
-        return must(PredicateUtil.isWithinMin(min), "lengthMustBeAtLeast");
-    }
-
-    public ValidationEngineString lengthMustBeWithin(int min, int max) {
+    public ValidationEngineString lengthMustBeWithin(int min, int max, String message) {
         return must(PredicateUtil.isWithinMin(min)
-                .and(PredicateUtil.isWithinMax(max)), "lengthMustBeWithin");
+                .and(PredicateUtil.isWithinMax(max)), message);
     }
 
-    public ValidationEngineString mustContain(String value) {
-        return must(s -> s.contains(value), "mustContain");
+    public ValidationEngineString mustContain(String value, String message) {
+        return must(s -> s.contains(value), message);
     }
 
-    public ValidationEngineString mustStartWith(String value) {
-        return must(s -> s.startsWith(value), "mustStartWith");
+    public ValidationEngineString mustStartWith(String value, String message) {
+        return must(s -> s.startsWith(value), message);
     }
 
     public ValidationEngineString must(Predicate<String> predicate, String message) {

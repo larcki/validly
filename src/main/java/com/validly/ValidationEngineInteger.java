@@ -17,17 +17,17 @@ public final class ValidationEngineInteger extends ValidationEngine<Integer, Val
         super(value);
     }
 
-    public ValidationEngineInteger valueMustBeAtLeast(int min) {
-        return must(PredicateUtil.minValue(min), "valueMustBeAtLeast");
+    public ValidationEngineInteger valueMustBeAtLeast(int min, String message) {
+        return must(PredicateUtil.minValue(min), message);
     }
 
-    public ValidationEngineInteger valueMustNotExceed(int min) {
-        return must(PredicateUtil.maxValue(min), "valueMustNotExceed");
+    public ValidationEngineInteger valueMustNotExceed(int min, String message) {
+        return must(PredicateUtil.maxValue(min), message);
     }
 
-    public ValidationEngineInteger valueMustBeWithin(int min, int max) {
+    public ValidationEngineInteger valueMustBeWithin(int min, int max, String message) {
         return must(PredicateUtil.minValue(min)
-                .and(PredicateUtil.maxValue(max)), "valueMustBeWithin");
+                .and(PredicateUtil.maxValue(max)), message);
     }
 
     public ValidationEngineInteger must(Predicate<Integer> predicate, String message) {

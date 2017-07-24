@@ -33,10 +33,6 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         this.note = null;
     }
 
-    public ValidationEngine<T, FV> must(Predicate<T> predicate) {
-        return must(predicate, "customMustCondition");
-    }
-
     public ValidationEngine<T, FV> must(Predicate<T> predicate, String message) {
         if (checkFailure(predicate)) {
             markAsFailed(message);
@@ -84,10 +80,6 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
                     .forEach(p -> must(p.getPredicate(), p.getMessage()));
         }
         return ValidationEngine.this;
-    }
-
-    public <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> mustConvert(Function<T, NEW_TYPE> conversionFunction) {
-        return mustConvert(conversionFunction, "mustConvert");
     }
 
     public <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> mustConvert(Function<T, NEW_TYPE> conversionFunction, String message) {

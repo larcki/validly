@@ -7,13 +7,13 @@ public class PreConditionInteger extends PreCondition<Integer, ValidationEngineI
     }
 
     @Override
-    public ValidationEngineInteger mustNotBeNull() {
-        return (ValidationEngineInteger) super.mustNotBeNull();
+    public ValidationEngineInteger mustNotBeNull(String message) {
+        return (ValidationEngineInteger) super.mustNotBeNull(message);
     }
 
     @Override
-    public ValidationEngineInteger mustNotBeNullWhen(boolean value) {
-        return (ValidationEngineInteger) super.mustNotBeNullWhen(value);
+    public ValidationEngineInteger mustNotBeNullWhen(boolean value, String message) {
+        return (ValidationEngineInteger) super.mustNotBeNullWhen(value, message);
     }
 
     @Override

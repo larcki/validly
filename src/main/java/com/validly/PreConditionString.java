@@ -6,20 +6,20 @@ public final class PreConditionString extends PreCondition<String, ValidationEng
         super(validationEngine);
     }
 
-    public ValidationEngineString mustNotBeBlank() {
+    public ValidationEngineString mustNotBeBlank(String message) {
         this.validationEngine.setNullIsValid(false);
-        this.validationEngine.mustFatally(PredicateUtil.isNotBlank(), "mustNotBeBlank");
+        this.validationEngine.mustFatally(PredicateUtil.isNotBlank(), message);
         return (ValidationEngineString) this.validationEngine;
     }
 
     @Override
-    public ValidationEngineString mustNotBeNull() {
-        return (ValidationEngineString) super.mustNotBeNull();
+    public ValidationEngineString mustNotBeNull(String message) {
+        return (ValidationEngineString) super.mustNotBeNull(message);
     }
 
     @Override
-    public ValidationEngineString mustNotBeNullWhen(boolean value) {
-        return (ValidationEngineString) super.mustNotBeNullWhen(value);
+    public ValidationEngineString mustNotBeNullWhen(boolean value, String message) {
+        return (ValidationEngineString) super.mustNotBeNullWhen(value, message);
     }
 
     @Override

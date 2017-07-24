@@ -10,9 +10,9 @@ public class PreCondition<T, FV extends ValidationEngine> {
         this.validationEngine = validationEngine;
     }
 
-    public ValidationEngine<T, ? extends ValidationEngine> mustNotBeNull() {
+    public ValidationEngine<T, ? extends ValidationEngine> mustNotBeNull(String message) {
         this.validationEngine.setNullIsValid(false);
-        this.validationEngine.mustFatally(Objects::nonNull, "mustNotBeNull");
+        this.validationEngine.mustFatally(Objects::nonNull, message);
         return this.validationEngine;
     }
 
@@ -21,9 +21,9 @@ public class PreCondition<T, FV extends ValidationEngine> {
         return this.validationEngine;
     }
 
-    public ValidationEngine<T, ? extends ValidationEngine> mustNotBeNullWhen(boolean mustNotBeNull) {
+    public ValidationEngine<T, ? extends ValidationEngine> mustNotBeNullWhen(boolean mustNotBeNull, String message) {
         if (mustNotBeNull) {
-            return mustNotBeNull();
+            return mustNotBeNull(message);
         } else {
             return canBeNull();
         }

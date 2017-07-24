@@ -26,24 +26,24 @@ public class CustomerScenarioTest {
         Notification note = new Notification();
 
         field("firstName", customer.getFirstName(), note)
-                .mustNotBeBlank()
-                .lengthMustBeAtLeast(2)
-                .lengthMustNotExceed(100);
+                .mustNotBeBlank("mustNotBeBlank")
+                .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
+                .lengthMustNotExceed(100, "lengthMustNotExceed");
 
         field("age", customer.getAge(), note)
-                .mustNotBeNull()
-                .valueMustBeAtLeast(1)
-                .valueMustNotExceed(130);
+                .mustNotBeNull("mustNotBeNull")
+                .valueMustBeAtLeast(1, "valueMustBeAtLeast")
+                .valueMustNotExceed(130, "valueMustNotExceed");
 
         field("referralCode", customer.getReferralCode(), note)
                 .canBeNull()
-                .mustStartWith("REX")
-                .mustContain("-")
-                .lengthMustBeWithin(10, 20);
+                .mustStartWith("REX", "mustStartWith")
+                .mustContain("-", "mustContain")
+                .lengthMustBeWithin(10, 20, "lengthMustBeWithin");
 
         field("ssn", customer.getSsn(), note)
-                .mustNotBeNullWhen(customer.getAge() > 18)
-                .lengthMustNotExceed(10);
+                .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
+                .lengthMustNotExceed(10, "lengthMustNotExceed");
 
         print(note);
 
@@ -58,8 +58,8 @@ public class CustomerScenarioTest {
         Notification note = new Notification();
 
         field("date", date, note)
-                .mustNotBeNull()
-                .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")))
+                .mustNotBeNull("mustNotBeNull")
+                .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "mustConvert")
                 .must(d -> d.isAfter(LocalDate.now()), "date must be in the future");
 
         print(note);
@@ -72,7 +72,7 @@ public class CustomerScenarioTest {
         Notification note = new Notification();
 
         field("", date, note)
-                .mustNotBeNull()
+                .mustNotBeNull("mustNotBeNull")
                 .when(localDate -> localDate.isBefore(LocalDate.now()),
                         Then.must(LocalDate::isLeapYear, "must be leap year when in the past"))
                 .must(localDate -> localDate.getDayOfMonth() == 3, "must be 3 day of month");
@@ -88,8 +88,8 @@ public class CustomerScenarioTest {
         Notification note = new Notification();
 
         field("postCode", address.getPostCode(), note)
-                .mustNotBeNull()
-                .must(s -> s.matches("//your.regex+"));
+                .mustNotBeNull("mustNotBeNull")
+                .must(s -> s.matches("//your.regex+"), "customMustCondition");
 
         //TODO: more cases
     }
@@ -105,24 +105,24 @@ public class CustomerScenarioTest {
         List<String> note = new ArrayList<>();
 
         field(customer.getFirstName(), note)
-                .mustNotBeBlank()
+                .mustNotBeBlank("mustNotBeBlank")
                 .must(s -> s.startsWith("K"), "start with fails")
-                .lengthMustNotExceed(100);
+                .lengthMustNotExceed(100, "lengthMustNotExceed");
 
         field(customer.getAge(), note)
-                .mustNotBeNull()
-                .valueMustBeAtLeast(1)
-                .valueMustNotExceed(130);
+                .mustNotBeNull("mustNotBeNull")
+                .valueMustBeAtLeast(1, "valueMustBeAtLeast")
+                .valueMustNotExceed(130, "valueMustNotExceed");
 
         field(customer.getReferralCode(), note)
                 .canBeNull()
-                .mustStartWith("REF")
-                .mustContain("-")
-                .lengthMustBeWithin(10, 20);
+                .mustStartWith("REF", "mustStartWith")
+                .mustContain("-", "mustContain")
+                .lengthMustBeWithin(10, 20, "lengthMustBeWithin");
 
         field(customer.getSsn(), note)
-                .mustNotBeNullWhen(customer.getAge() > 18)
-                .lengthMustNotExceed(10);
+                .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
+                .lengthMustNotExceed(10, "lengthMustNotExceed");
 
 
         print(note);
@@ -138,24 +138,24 @@ public class CustomerScenarioTest {
         customer.setSsn("tooLongValue");
 
         FailFastValidator.field(customer.getFirstName())
-                .mustNotBeBlank()
-                .lengthMustBeAtLeast(2)
-                .lengthMustNotExceed(100);
+                .mustNotBeBlank("mustNotBeBlank")
+                .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
+                .lengthMustNotExceed(100, "lengthMustNotExceed");
 
         FailFastValidator.field(customer.getAge())
-                .mustNotBeNull()
-                .valueMustBeAtLeast(1)
-                .valueMustNotExceed(130);
+                .mustNotBeNull("mustNotBeNull")
+                .valueMustBeAtLeast(1, "valueMustBeAtLeast")
+                .valueMustNotExceed(130, "valueMustNotExceed");
 
         FailFastValidator.field(customer.getReferralCode())
                 .canBeNull()
-                .mustStartWith("REF")
-                .mustContain("-")
-                .lengthMustBeWithin(10, 20);
+                .mustStartWith("REF", "mustStartWith")
+                .mustContain("-", "mustContain")
+                .lengthMustBeWithin(10, 20, "lengthMustBeWithin");
 
         FailFastValidator.field(customer.getSsn())
-                .mustNotBeNullWhen(customer.getAge() > 18)
-                .lengthMustNotExceed(10);
+                .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
+                .lengthMustNotExceed(10, "lengthMustNotExceed");
 
     }
 
@@ -166,8 +166,8 @@ public class CustomerScenarioTest {
         List<String> note = new ArrayList<>();
 
         field(instant, note)
-                .mustNotBeNull()
-                .must(i -> i.isAfter(Instant.now()))
+                .mustNotBeNull("mustNotBeNull")
+                .must(i -> i.isAfter(Instant.now()), "customMustCondition")
                 .must(i -> i.isBefore(Instant.now().plus(3, ChronoUnit.DAYS)), "AAA");
 
         print(note);
@@ -180,9 +180,9 @@ public class CustomerScenarioTest {
         Notification note = new Notification();
 
         field("field", value, note)
-                .mustNotBeNull()
+                .mustNotBeNull("mustNotBeNull")
                 .when(true, Then.must(s -> s.startsWith("v"), "must start with"))
-                .must(s1 -> s1.length() > 5);
+                .must(s1 -> s1.length() > 5, "customMustCondition");
 
         print(note);
 
@@ -193,9 +193,9 @@ public class CustomerScenarioTest {
         String value = "valu";
 
         FailFastValidator.field(value)
-                .mustNotBeNull()
+                .mustNotBeNull("mustNotBeNull")
                 .when(true, Then.must(s -> s.startsWith("v"), "must start with"))
-                .must(s1 -> s1.length() > 5);
+                .must(s1 -> s1.length() > 5, "customMustCondition");
     }
 
     private void print(Notification note) {
