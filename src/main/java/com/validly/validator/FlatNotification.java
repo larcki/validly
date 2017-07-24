@@ -1,19 +1,28 @@
 package com.validly.validator;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class FlatNotification extends Notification {
+class FlatNotification implements Notification {
 
-    public static final String NAME = FlatNotification.class.getName();
+    private List<String> messages;
 
-    public FlatNotification(List<String> messages) {
-        super(Collections.singletonMap(NAME, messages));
+    FlatNotification(List<String> messages) {
+        this.messages = messages;
+        if (messages == null) {
+            this.messages = new ArrayList<>();
+        }
     }
 
     @Override
     public void addMessage(String field, String message) {
-        fieldMessages.get(NAME).add(message);
+        messages.add(message);
+    }
+
+    @Override
+    public Map<String, List<String>> getMessages() {
+        return null;
     }
 
 }

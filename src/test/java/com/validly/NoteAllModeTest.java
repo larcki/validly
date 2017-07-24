@@ -1,13 +1,15 @@
 package com.validly;
 
+import com.validly.validator.Notification;
+import com.validly.validator.NotificationImpl;
 import com.validly.validator.Then;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.validly.NoteTestUtil.failure;
-import static com.validly.NoteTestUtil.success;
+import static com.validly.NoteTestUtil.*;
 import static com.validly.validator.NoteAllValidator.field;
 
 public class NoteAllModeTest {
@@ -54,6 +56,27 @@ public class NoteAllModeTest {
         failure("1", rule, "lengthMustBeAtLeast");
         failure("4444", rule, "lengthMustNotExceed");
         failure("", rule, "mustNotBeBlank");
+    }
+
+    @Test
+    public void testStringBasics_usingNoteObject() throws Exception {
+        BiConsumer<String, Notification> rule = (value, note) -> field("identifier", value, note)
+                .mustNotBeBlank()
+                .lengthMustBeAtLeast(2)
+                .lengthMustNotExceed(3);
+
+        successWithNote("22", rule);
+        successWithNote("333", rule);
+
+        failureWithNote("1", rule, note("identifier", "lengthMustBeAtLeast"));
+        failureWithNote("4444", rule, note("identifier", "lengthMustNotExceed"));
+        failureWithNote("", rule, note("identifier", "mustNotBeBlank"));
+    }
+
+    private Notification note(String identifier, String... messages) {
+        Notification notification = new NotificationImpl();
+        Arrays.asList(messages).forEach(s -> notification.addMessage(identifier, s));
+        return notification;
     }
 
     @Test

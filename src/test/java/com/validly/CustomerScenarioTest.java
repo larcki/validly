@@ -23,7 +23,7 @@ public class CustomerScenarioTest {
         customer.setReferralCode("REF.111122223333");
         customer.setSsn("tooLongValue");
 
-        Notification note = new Notification();
+        NotificationImpl note = new NotificationImpl();
 
         field("firstName", customer.getFirstName(), note)
                 .mustNotBeBlank()
@@ -55,7 +55,7 @@ public class CustomerScenarioTest {
     public void testDateString() throws Exception {
         String date = "12.12.2014";
 
-        Notification note = new Notification();
+        NotificationImpl note = new NotificationImpl();
 
         field("date", date, note)
                 .mustNotBeNull()
@@ -69,7 +69,7 @@ public class CustomerScenarioTest {
     public void testDate() throws Exception {
         LocalDate date = LocalDate.of(2016, 12, 3);
 
-        Notification note = new Notification();
+        NotificationImpl note = new NotificationImpl();
 
         field("", date, note)
                 .mustNotBeNull()
@@ -85,7 +85,7 @@ public class CustomerScenarioTest {
         Address address = new Address();
         address.setPostCode("");
 
-        Notification note = new Notification();
+        NotificationImpl note = new NotificationImpl();
 
         field("postCode", address.getPostCode(), note)
                 .mustNotBeNull()
@@ -177,7 +177,7 @@ public class CustomerScenarioTest {
     public void testWhenWithString() throws Exception {
         String value = "salu";
 
-        Notification note = new Notification();
+        NotificationImpl note = new NotificationImpl();
 
         field("field", value, note)
                 .mustNotBeNull()
@@ -198,7 +198,7 @@ public class CustomerScenarioTest {
                 .must(s1 -> s1.length() > 5);
     }
 
-    private void print(Notification note) {
+    private void print(NotificationImpl note) {
         if (note.isNotEmpty()) {
             note.getMessages().forEach((field, reason) -> System.out.println(field + ": " + reason));
         }
