@@ -96,7 +96,7 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
             markAsFailed(message);
             stopValidation = true;
         }
-        return copyValidator(convertedValue);
+        return copyValidator(convertedValue, this);
     }
 
     private void markAsFailed(String message) {
@@ -110,21 +110,12 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         }
     }
 
-    //TODO implement for others than fail-fast as well
-//    private <NEW_TYPE> FieldValidator<NEW_TYPE, FieldValidator> copyValidator(NEW_TYPE value) {
-//        FieldValidator<NEW_TYPE, FieldValidator> newValidator = new FieldValidator<>(value);
-//        newValidator.setIgnore(ignore);
-//        newValidator.setNullIsValid(nullIsValid);
-//        newValidator.setStopValidation(stopValidation);
-//        return newValidator;
-//    }
-
-    private <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> copyValidator(NEW_TYPE value) {
-        ValidationEngine<NEW_TYPE, ValidationEngine> newValidator = new ValidationEngine<>(fieldName, value, note);
-        newValidator.setIgnore(ignore);
-        newValidator.setNullIsValid(nullIsValid);
-        newValidator.setStopValidation(stopValidation);
-        newValidator.setFailOnFirst(failOnFirst);
+    private static <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> copyValidator(NEW_TYPE value, ValidationEngine source) {
+        ValidationEngine<NEW_TYPE, ValidationEngine> newValidator = new ValidationEngine<>(source.fieldName, value, source.note);
+        newValidator.setIgnore(source.ignore);
+        newValidator.setNullIsValid(source.nullIsValid);
+        newValidator.setStopValidation(source.stopValidation);
+        newValidator.setFailOnFirst(source.failOnFirst);
         return newValidator;
     }
 
