@@ -25,23 +25,23 @@ public class CustomerScenarioTest {
 
         Notification note = new Notification();
 
-        valid("firstName", customer.getFirstName(), note)
+        valid(customer.getFirstName(), "firstName", note)
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(100, "lengthMustNotExceed");
 
-        valid("age", customer.getAge(), note)
+        valid(customer.getAge(), "age", note)
                 .mustNotBeNull("mustNotBeNull")
                 .valueMustBeAtLeast(1, "valueMustBeAtLeast")
                 .valueMustNotExceed(130, "valueMustNotExceed");
 
-        valid("referralCode", customer.getReferralCode(), note)
+        valid(customer.getReferralCode(), "referralCode", note)
                 .canBeNull()
                 .mustStartWith("REX", "mustStartWith")
                 .mustContain("-", "mustContain")
                 .lengthMustBeWithin(10, 20, "lengthMustBeWithin");
 
-        valid("ssn", customer.getSsn(), note)
+        valid(customer.getSsn(), "ssn", note)
                 .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
                 .lengthMustNotExceed(10, "lengthMustNotExceed");
 
@@ -57,7 +57,7 @@ public class CustomerScenarioTest {
 
         Notification note = new Notification();
 
-        valid("date", date, note)
+        valid(date, "date", note)
                 .mustNotBeNull("mustNotBeNull")
                 .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "mustConvert")
                 .must(d -> d.isAfter(LocalDate.now()), "date must be in the future");
@@ -71,7 +71,7 @@ public class CustomerScenarioTest {
 
         Notification note = new Notification();
 
-        valid("", date, note)
+        valid(date, "", note)
                 .mustNotBeNull("mustNotBeNull")
                 .when(localDate -> localDate.isBefore(LocalDate.now()),
                         Then.must(LocalDate::isLeapYear, "must be leap year when in the past"))
@@ -87,7 +87,7 @@ public class CustomerScenarioTest {
 
         Notification note = new Notification();
 
-        valid("postCode", address.getPostCode(), note)
+        valid(address.getPostCode(), "postCode", note)
                 .mustNotBeNull("mustNotBeNull")
                 .must(s -> s.matches("//your.regex+"), "customMustCondition");
 
@@ -179,7 +179,7 @@ public class CustomerScenarioTest {
 
         Notification note = new Notification();
 
-        valid("field", value, note)
+        valid(value, "field", note)
                 .mustNotBeNull("mustNotBeNull")
                 .when(true, Then.must(s -> s.startsWith("v"), "must start with"))
                 .must(s1 -> s1.length() > 5, "customMustCondition");

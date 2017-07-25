@@ -5,7 +5,7 @@ import java.util.List;
 public class NoteFirstValidator {
 
     // STRING
-    public static PreConditionString valid(String fieldName, String value, ValidlyNote note) {
+    public static PreConditionString valid(String value, String fieldName, ValidlyNote note) {
         ValidationEngineString validator = new ValidationEngineString(fieldName, value, note);
         validator.setFailOnFirst(true);
         return new PreConditionString(validator);
@@ -18,7 +18,7 @@ public class NoteFirstValidator {
 
 
     // INTEGER
-    public static PreConditionInteger valid(String fieldName, Integer value, ValidlyNote note) {
+    public static PreConditionInteger valid(Integer value, String fieldName, ValidlyNote note) {
         ValidationEngineInteger validator = new ValidationEngineInteger(fieldName, value, note);
         validator.setFailOnFirst(true);
         return new PreConditionInteger(validator);
@@ -31,7 +31,7 @@ public class NoteFirstValidator {
 
 
     // GENERIC
-    public static <T> PreCondition<T, ValidationEngine> valid(String fieldName, T value, ValidlyNote note) {
+    public static <T> PreCondition<T, ValidationEngine> valid(T value, String fieldName, ValidlyNote note) {
         ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(fieldName, value, note);
         validationEngine.setFailOnFirst(true);
         return new PreCondition<>(validationEngine);

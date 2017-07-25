@@ -56,7 +56,7 @@ public class NoteAllModeTest {
 
     @Test
     public void testStringBasics_usingNoteObject() throws Exception {
-        BiConsumer<String, ValidlyNote> rule = (value, note) -> NoteAllValidator.valid("identifier", value, note)
+        BiConsumer<String, ValidlyNote> rule = (value, note) -> NoteAllValidator.valid(value, "identifier", note)
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(3, "lengthMustNotExceed");
