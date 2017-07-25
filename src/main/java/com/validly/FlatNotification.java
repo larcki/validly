@@ -16,7 +16,7 @@ class FlatNotification implements ValidlyNote {
     }
 
     @Override
-    public void addMessage(String field, String message) {
+    public void addMessage(String owner, String message) {
         messages.add(message);
     }
 

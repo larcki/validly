@@ -17,9 +17,9 @@ public class Notification implements ValidlyNote {
         this.fieldMessages = fieldMessages;
     }
 
-    public void addMessage(String field, String message) {
-        fieldMessages.putIfAbsent(field, new ArrayList<>());
-        fieldMessages.get(field).add(message);
+    public void addMessage(String owner, String message) {
+        fieldMessages.putIfAbsent(owner, new ArrayList<>());
+        fieldMessages.get(owner).add(message);
     }
 
     public List<String> getMessages(String field) {
