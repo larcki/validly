@@ -47,6 +47,12 @@ public class PreCondition<T, FV extends ValidationEngine> {
         }
     }
 
+    /**
+     * Ignores the whole validation rule if the given value is false.
+     *
+     * @param validate false will ignore the validation
+     * @return validation engine
+     */
     public PreCondition<T, ? extends ValidationEngine> validateWhen(boolean validate) {
         this.validationEngine.setIgnore(!validate);
         return this;

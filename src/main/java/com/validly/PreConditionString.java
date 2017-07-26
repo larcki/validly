@@ -6,6 +6,19 @@ public final class PreConditionString extends PreCondition<String, ValidationEng
         super(validationEngine);
     }
 
+
+    /**
+     * Set a blank value to be considered as a validation error.
+     * <p>
+     * null       = blank
+     * ""         = blank
+     * " "        = blank
+     * "bob"      = not blank
+     * "  bob  "  = not blank
+     *
+     * @param message error message
+     * @return validation engine
+     */
     public ValidationEngineString mustNotBeBlank(String message) {
         this.validationEngine.setNullIsValid(false);
         this.validationEngine.mustFatally(PredicateUtil.isNotBlank(), message);

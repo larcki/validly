@@ -33,6 +33,13 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         this.note = null;
     }
 
+    /**
+     * Set the value for which the predicate test returns false to be considered as invalid.
+     *
+     * @param predicate predicate the evaluate
+     * @param message   validation error
+     * @return validation engine
+     */
     public ValidationEngine<T, FV> must(Predicate<T> predicate, String message) {
         if (checkFailure(predicate)) {
             markAsFailed(message);
@@ -40,6 +47,20 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         return this;
     }
 
+    /**
+     * Same as method {@link #must} but the remaining validation predicates defined for this value will not be evaluated
+     * if the predicate test returns false (Note-All Mode).
+     * <p>
+     * E.g.<br>
+     * value(name, note)<br>
+     * .mustNotBeNull("")<br>
+     * .mustFatally(s -> s.equals("something"), "") <-- if this fails<br>
+     * .must(s -> s.startsWith("so"), "")           <-- this won't be evaluated<br>
+     *
+     * @param predicate predicate to evaluate
+     * @param message   validation error
+     * @return validation engine
+     */
     public ValidationEngine<T, FV> mustFatally(Predicate<T> predicate, String message) {
         if (checkFailure(predicate)) {
             stopValidation = true;
@@ -48,40 +69,21 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         return this;
     }
 
-    private boolean checkFailure(Predicate<T> predicate) {
-        return !ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value);
-    }
-
-    private boolean valueIsNullAndItsValid() {
-        return value == null && nullIsValid;
-    }
-
-
-    // When-Then Construct
-    //
-    // FIXME: these will not return the TypedValidator (e.g. StringValidator) and cannot be overriden
-    // workaraund: If only provide on predicate then no need to declare final (with safeVarargs) and override them
-
-
-    @SafeVarargs
-    public final ValidationEngine<T, FV> when(Predicate<T> predicate, Then<T>... thenPredicates) {
-        return thenValidation(!stopValidation && predicate.test(value), thenPredicates);
-    }
-
-    @SafeVarargs
-    public final ValidationEngine<T, FV> when(boolean value, Then<T>... thenPredicates) {
-        return thenValidation(value, thenPredicates);
-    }
-
-    @SafeVarargs
-    private final ValidationEngine<T, FV> thenValidation(boolean whenConditionResult, Then<T>... thenPredicates) {
-        if (whenConditionResult) {
-            Arrays.stream(thenPredicates)
-                    .forEach(p -> must(p.getPredicate(), p.getMessage()));
-        }
-        return ValidationEngine.this;
-    }
-
+    /**
+     * Applies the given function with the value. This allows values to be converted into a different types during the
+     * validation. If the provided function returns null or throws an exception the value will be considered as invalid
+     * and no further predicates will be evaluated (Note-All Mode).
+     * <p>
+     * valid(date, "date", note)<br>
+     * .mustNotBeNull("must not be null")<br>
+     * .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "invalid date")<br>
+     * .must(d -> d.isAfter(LocalDate.now()), "date must be in the future");<br>
+     *
+     * @param conversionFunction function the is applied with the value as input
+     * @param message            validation error
+     * @param <NEW_TYPE>         return type of the function
+     * @return validation engine typed as NEW_TYPE
+     */
     public <NEW_TYPE> ValidationEngine<NEW_TYPE, ValidationEngine> mustConvert(Function<T, NEW_TYPE> conversionFunction, String message) {
         NEW_TYPE convertedValue = null;
         try {
@@ -97,6 +99,40 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
             stopValidation = true;
         }
         return copyValidator(convertedValue, this);
+    }
+
+    @SafeVarargs
+    public final ValidationEngine<T, FV> when(Predicate<T> predicate, Then<T>... thenPredicates) {
+        return thenValidation(!stopValidation && predicate.test(value), thenPredicates);
+    }
+
+    @SafeVarargs
+    public final ValidationEngine<T, FV> when(boolean value, Then<T>... thenPredicates) {
+        return thenValidation(value, thenPredicates);
+    }
+
+    private boolean checkFailure(Predicate<T> predicate) {
+        return !ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value);
+    }
+
+    private boolean valueIsNullAndItsValid() {
+        return value == null && nullIsValid;
+    }
+
+
+    // When-Then Construct
+    //
+    // FIXME: these will not return the typed envine (e.g. ValidationEngineString) and cannot be overriden
+    // workaraund: If only provide on predicate then no need to declare final (with safeVarargs) and override them
+
+
+    @SafeVarargs
+    private final ValidationEngine<T, FV> thenValidation(boolean whenConditionResult, Then<T>... thenPredicates) {
+        if (whenConditionResult) {
+            Arrays.stream(thenPredicates)
+                    .forEach(p -> must(p.getPredicate(), p.getMessage()));
+        }
+        return ValidationEngine.this;
     }
 
     private void markAsFailed(String message) {
