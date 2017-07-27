@@ -63,16 +63,9 @@ public class NoteAllModeTest {
 
         successWithNote("22", rule);
         successWithNote("333", rule);
-
         failureWithNote("1", rule, note("identifier", "lengthMustBeAtLeast"));
         failureWithNote("4444", rule, note("identifier", "lengthMustNotExceed"));
         failureWithNote("", rule, note("identifier", "mustNotBeBlank"));
-    }
-
-    private ValidlyNote note(String identifier, String... messages) {
-        ValidlyNote validlyNote = new Notification();
-        Arrays.asList(messages).forEach(s -> validlyNote.addMessage(identifier, s));
-        return validlyNote;
     }
 
     @Test
@@ -104,6 +97,12 @@ public class NoteAllModeTest {
         failure(0, rule, "valueMustBeAtLeast");
         failure(15, rule, "valueMustNotExceed");
         failure(null, rule, "mustNotBeNull");
+    }
+
+    private ValidlyNote note(String identifier, String... messages) {
+        ValidlyNote validlyNote = new Notification();
+        Arrays.asList(messages).forEach(s -> validlyNote.addMessage(identifier, s));
+        return validlyNote;
     }
 
 }

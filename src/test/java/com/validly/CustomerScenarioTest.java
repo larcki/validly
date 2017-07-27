@@ -7,21 +7,24 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.validly.NoteFirstValidator.*;
+import static com.validly.NoteFirstValidator.valid;
 import static java.time.format.DateTimeFormatter.ofPattern;
+import static junit.framework.Assert.assertTrue;
 
 public class CustomerScenarioTest {
 
     @Test
-    public void basicCustomerValidation() {
-
+    public void testBasicCustomerValidation() {
         Customer customer = new Customer();
         customer.setFirstName("J");
         customer.setAge(0);
         customer.setReferralCode("REF.111122223333");
         customer.setSsn("tooLongValue");
+        List<String> merits = Arrays.asList("one", "two");
+        customer.setMerits(merits);
 
         Notification note = new Notification();
 
@@ -45,10 +48,12 @@ public class CustomerScenarioTest {
                 .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
                 .lengthMustNotExceed(10, "lengthMustNotExceed");
 
+        valid(customer.getMerits(), "merits", note)
+                .mustNotBeNull("must not be null")
+                .must(strings -> strings.size() > 2, "should have more than two merits");
+
         print(note);
 
-        //TODO: makes sense to rename to isRequired etc.
-        // examples about the result and that custom messages can be provided, e.g
     }
 
     @Test
@@ -196,6 +201,18 @@ public class CustomerScenarioTest {
                 .mustNotBeNull("mustNotBeNull")
                 .when(true, Then.must(s -> s.startsWith("v"), "must start with"))
                 .must(s1 -> s1.length() > 5, "customMustCondition");
+    }
+
+    @Test
+    public void testNullIsValidWithWhen() throws Exception {
+        String value = null;
+        List<String> note = new ArrayList<>();
+
+        valid(value, note)
+                .canBeNull()
+                .when(s -> s.contains("something"));
+
+        assertTrue(note.isEmpty());
     }
 
     private void print(Notification note) {

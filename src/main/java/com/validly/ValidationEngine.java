@@ -101,18 +101,36 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         return copyValidator(convertedValue, this);
     }
 
+    /**
+     * Evaluate the provided Then predicate(s) if the first predicate is true.
+     *
+     * @param predicate      determines whether to evaluate the then predicate(s)
+     * @param thenPredicates array of then predicates
+     * @return validation engine
+     */
     @SafeVarargs
     public final ValidationEngine<T, FV> when(Predicate<T> predicate, Then<T>... thenPredicates) {
-        return thenValidation(!stopValidation && predicate.test(value), thenPredicates);
+        return thenValidation(evaluatePredicate() && predicate.test(value), thenPredicates);
     }
 
+    /**
+     * Evaluate the provided Then predicate(s) if the given boolean value is true.
+     *
+     * @param value          determines whether to evaluate the then predicate(s)
+     * @param thenPredicates array of then predicates
+     * @return validation engine
+     */
     @SafeVarargs
     public final ValidationEngine<T, FV> when(boolean value, Then<T>... thenPredicates) {
         return thenValidation(value, thenPredicates);
     }
 
     private boolean checkFailure(Predicate<T> predicate) {
-        return !ignore && !stopValidation && !valueIsNullAndItsValid() && !predicate.test(value);
+        return evaluatePredicate() && !predicate.test(value);
+    }
+
+    private boolean evaluatePredicate() {
+        return !ignore && !stopValidation && !valueIsNullAndItsValid();
     }
 
     private boolean valueIsNullAndItsValid() {
@@ -124,8 +142,6 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
     //
     // FIXME: these will not return the typed envine (e.g. ValidationEngineString) and cannot be overriden
     // workaraund: If only provide on predicate then no need to declare final (with safeVarargs) and override them
-
-
     @SafeVarargs
     private final ValidationEngine<T, FV> thenValidation(boolean whenConditionResult, Then<T>... thenPredicates) {
         if (whenConditionResult) {
