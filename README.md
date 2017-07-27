@@ -2,42 +2,37 @@ Validly - Validation library for Java 8
 =======================================
 [![Build Status](https://travis-ci.org/larcki/validly.svg?branch=master)](https://travis-ci.org/larcki/validly)
 
-Validly is an abstraction of the conditional constructs of the language that provides convenience methods for the most commonly used validation conditions.
+Validly provides a clean and convenient way of implementing validation logic by abstracting away the conditional constructs and imperative nature of Java. 
 
-* Focus on expressing the validation rules instead of writing an if-else mess.
-* Use [Notification pattern](https://martinfowler.com/articles/replaceThrowWithNotification.html) to capture all the validation failures.
+Validly allows you to:
+
+* Focus on expressing the validation rules in declarative way instead of writing an if-else mess.
+* Use [Notification pattern](https://martinfowler.com/articles/replaceThrowWithNotification.html) to capture all the validation errors.
 
 Using Validly
 -------------
 
-There are three different ways of using Validly. 
-
-1. Note First mode: gathers the first failure of each field into a List or Notification object.
-2. Note All mode: gathers all the failures of each field into a List or Notification object. 
-3. Fail-Fast mode: throws a ValidationFailureException when validation failure occurs.
-
 ```java
+import static com.validly.FailFastValidator.*; // or use NoteAllValidator or NoteFirstValidator
 
-        field("firstName", customer.getFirstName(), notifications)
-                .mustNotBeBlank()
-                .lengthMustBeAtLeast(2)
-                .lengthMustNotExceed(100);
-
-        field("age", customer.getAge(), notifications)
-                .mustNotBeNull()
-                .valueMustBeAtLeast(1)
-                .valueMustNotExceed(130);
-
-        field("referralCode", customer.getReferralCode(), notifications)
-                .canBeNull()
-                .mustStartWith("REF")
-                .mustContain("-")
-                .lengthMustBeWithin(10, 20);
-
-        field("ssn", customer.getSsn(), notifications)
-                .mustNotBeNullWhen(customer.getAge() > 18)
-                .lengthMustNotExceed(10);
-
+public class HelloWorld {
+    public static void main(String[] args) {
+        valid(args[0])
+            .mustNotBeNull("It's null")
+            .lengthMustBeAtLeast(2, "It's too short")
+            .mustStartWith("Hello", "It doesn't start properly")
+            .must(s -> myOwnRule(s), "It doesn't match my own rule");
+    }
+}
 ```
+Validly has three different validation modes. 
+
+1. Fail-Fast: throws a ValidationFailureException when validation error occurs.
+2. Note-First: gathers the first error of each value into a List or Notification object.
+3. Note-All: gathers all the errors of each value into a List or Notification object. 
+
+Examples
+-------------
+
 
 
