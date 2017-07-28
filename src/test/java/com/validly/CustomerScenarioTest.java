@@ -215,6 +215,20 @@ public class CustomerScenarioTest {
         assertTrue(note.isEmpty());
     }
 
+    @Test
+    public void testValidateOnlyWhen() throws Exception {
+        String value = "vaa";
+        Notification note = new Notification();
+
+        NoteAllValidator.valid(value, "", note)
+                .when(true,
+                        Then.mustNotBeNull("can't be null"),
+                        Then.must(s -> s.startsWith("v"), "must start with v"))
+                .must(s1 -> s1.length() > 2, "too short");
+
+        assertTrue(note.getMessages().isEmpty());
+    }
+
     private void print(Notification note) {
         if (note.isNotEmpty()) {
             note.getMessages().forEach((field, reason) -> System.out.println(field + ": " + reason));

@@ -1,5 +1,6 @@
 package com.validly;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class PreCondition<T, FV extends ValidationEngine> {
@@ -57,6 +58,24 @@ public class PreCondition<T, FV extends ValidationEngine> {
         this.validationEngine.setIgnore(!validate);
         return this;
     }
+
+    /**
+     * Evaluate the provided Then predicate(s) if the given boolean value is true. Note that using the when() -condition
+     * as the first step, all the predicates will be executed using {@link ValidationEngine#mustFatally} method.
+     *
+     * @param value          determines whether to evaluate the then predicate(s)
+     * @param thenPredicates array of then predicates
+     * @return validation engine
+     */
+    @SafeVarargs
+    public final ValidationEngine<T, ? extends ValidationEngine> when(boolean value, Then<T>... thenPredicates) {
+        if (value) {
+            Arrays.stream(thenPredicates)
+                    .forEach(p -> this.validationEngine.mustFatally(p.getPredicate(), p.getMessage()));
+        }
+        return this.validationEngine;
+    }
+
 
 }
 
