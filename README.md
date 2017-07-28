@@ -12,12 +12,24 @@ Validly allows you to:
 Using Validly
 -------------
 
-```java
-import static com.validly.FailFastValidator.*; // or use NoteAllValidator or NoteFirstValidator
+Validly has three different validation modes. 
 
-public class HelloWorld {
-    public static void main(String[] args) {
-        valid(args[0])
+1. **Fail-Fast**: throws a ValidationFailureException when validation error occurs.
+2. **Note-First**: gathers the first error of each value into a List or Notification object.
+3. **Note-All**: gathers all the errors of each value into a List or Notification object. 
+
+
+### Examples ###
+
+#### Basic syntax #####
+Fail-Fast mode is ideal when validating one input value.
+```java
+import static com.validly.FailFastValidator.*;
+
+public class Validator {
+
+    public void validate(String input) throws ValidationErrorException {
+        valid(input)
             .mustNotBeNull("It's null")
             .lengthMustBeAtLeast(2, "It's too short")
             .mustStartWith("Hello", "It doesn't start properly")
@@ -25,14 +37,32 @@ public class HelloWorld {
     }
 }
 ```
-Validly has three different validation modes. 
+Replacing throwing exceptions with notification makes sense if you want to gather all (or the first) validation errors. Ideal when validating domain objects.
+```java
+// If you want to gather every error of each field use NoteAllValidator
+import static com.validly.NoteFirstValidator.*; 
 
-1. Fail-Fast: throws a ValidationFailureException when validation error occurs.
-2. Note-First: gathers the first error of each value into a List or Notification object.
-3. Note-All: gathers all the errors of each value into a List or Notification object. 
+public class Validator {
 
-Examples
--------------
+    public Notification validate(Customer customer) {
+        Notification note = new Notification(); // You can also use List
+
+        valid(customer.getName(), "name", note)
+                .mustNotBeBlank("Can't be blank")
+                .lengthMustNotExceed(20, "Too long");
+
+        valid(customer.getAge(), "age", note)
+                .mustNotBeNull("Can't be null")
+                .valueMustBeAtLeast(0, "Can't be negative");
+
+        valid(customer.getSsn(), "ssn", note)
+                .mustNotBeNullWhen(customer.getAge() >= 18, "Required for adults")
+                .must(s -> s.matches("//your.regex+"), "Invalid format");
+
+        return note;
+    }
+}
+```
 
 
 
