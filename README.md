@@ -12,17 +12,7 @@ Validly allows you to:
 Using Validly
 -------------
 
-Validly has three different validation modes. 
-
-1. **Fail-Fast**: throws a ValidationFailureException when validation error occurs.
-2. **Note-First**: gathers the first error of each value into a List or Notification object.
-3. **Note-All**: gathers all the errors of each value into a List or Notification object. 
-
-
-### Examples ###
-
 #### Basic syntax #####
-Fail-Fast mode is ideal when validating one input value.
 ```java
 import static com.validly.FailFastValidator.*;
 
@@ -37,7 +27,13 @@ public class Validator {
     }
 }
 ```
-Replacing throwing exceptions with notification makes sense if you want to gather all (or the first) validation errors. Ideal when validating domain objects.
+Validly has three different validation modes. 
+
+1. **Fail-Fast**: throws a ValidationFailureException when validation error occurs. (Example above)
+2. **Note-First**: gathers the first error of each value into a List or Notification object.
+3. **Note-All**: gathers all the errors of each value into a List or Notification object. 
+
+Fail-Fast mode is ideal when validating one input value. Replacing throwing exceptions with notification makes sense if you want to gather all (or the first) validation errors - ideal when validating domain objects.
 ```java
 // If you want to gather every error of each field use NoteAllValidator
 import static com.validly.NoteFirstValidator.*; 
