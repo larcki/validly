@@ -6,13 +6,13 @@ public class Customer {
 
     private String firstName;
     private String lastName;
+    private String title;
     private String referralCode;
     private Integer age;
-    private List<String> merits;
-    private Address address;
+    private List<String> phoneNumbers;
     private String ssn;
 
-    public String getFirstName() {
+    public String getName() {
         return firstName;
     }
 
@@ -36,20 +36,12 @@ public class Customer {
         this.age = age;
     }
 
-    public List<String> getMerits() {
-        return merits;
+    public List<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
-    public void setMerits(List<String> merits) {
-        this.merits = merits;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setPhoneNumbers(List<String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
     }
 
     public String getSsn() {
@@ -66,6 +58,14 @@ public class Customer {
 
     public void setReferralCode(String referralCode) {
         this.referralCode = referralCode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
 

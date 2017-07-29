@@ -24,11 +24,11 @@ public class CustomerScenarioTest {
         customer.setReferralCode("REF.111122223333");
         customer.setSsn("tooLongValue");
         List<String> merits = Arrays.asList("one", "two");
-        customer.setMerits(merits);
+        customer.setPhoneNumbers(merits);
 
         Notification note = new Notification();
 
-        valid(customer.getFirstName(), "firstName", note)
+        valid(customer.getName(), "firstName", note)
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(100, "lengthMustNotExceed");
@@ -48,7 +48,7 @@ public class CustomerScenarioTest {
                 .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
                 .lengthMustNotExceed(10, "lengthMustNotExceed");
 
-        valid(customer.getMerits(), "merits", note)
+        valid(customer.getPhoneNumbers(), "merits", note)
                 .mustNotBeNull("must not be null")
                 .must(strings -> strings.size() > 2, "should have more than two merits");
 
@@ -109,7 +109,7 @@ public class CustomerScenarioTest {
 
         List<String> note = new ArrayList<>();
 
-        valid(customer.getFirstName(), note)
+        valid(customer.getName(), note)
                 .mustNotBeBlank("mustNotBeBlank")
                 .must(s -> s.startsWith("K"), "start with fails")
                 .lengthMustNotExceed(100, "lengthMustNotExceed");
@@ -142,7 +142,7 @@ public class CustomerScenarioTest {
         customer.setReferralCode("REF.111122223333");
         customer.setSsn("tooLongValue");
 
-        FailFastValidator.valid(customer.getFirstName())
+        FailFastValidator.valid(customer.getName())
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(100, "lengthMustNotExceed");
