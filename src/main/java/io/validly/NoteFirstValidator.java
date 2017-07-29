@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Class for starting a validation rule in Note-First mode:
  * <p>
- * In this mode the validation predicates will be evaluated in sequential order until the first failure occurs which
+ * In this mode the validation predicates will be evaluated in sequential order until the first error occurs which
  * will be then added with a message into a {@link List} or {@link ValidlyNote} object provided.
  */
 public class NoteFirstValidator {

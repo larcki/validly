@@ -1,6 +1,6 @@
 package io.validly;
 
-import io.validly.excpetion.ValidationFailureException;
+import io.validly.excpetion.ValidationErrorException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -155,7 +155,7 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
         if (note != null) {
             note.addMessage(fieldName, message);
         } else {
-            throw new ValidationFailureException("Validation failure: " + message);
+            throw new ValidationErrorException("Validation error: " + message);
         }
         if (failOnFirst) {
             stopValidation = true;

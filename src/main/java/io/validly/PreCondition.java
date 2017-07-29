@@ -12,7 +12,7 @@ public class PreCondition<T, FV extends ValidationEngine> {
     }
 
     /**
-     * Set the null value to be considered as a validation failure.
+     * Set the null value to be considered as a validation error.
      *
      * @param message error message.
      * @return validation engine
@@ -34,7 +34,7 @@ public class PreCondition<T, FV extends ValidationEngine> {
     }
 
     /**
-     * Set the null value to be considered as a validation failure if the provided boolean is true.
+     * Set the null value to be considered as a validation error if the provided boolean is true.
      *
      * @param mustNotBeNull boolean to determine if null value should be invalid
      * @param message       error message

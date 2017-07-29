@@ -1,6 +1,6 @@
 package io.validly;
 
-import io.validly.excpetion.ValidationFailureException;
+import io.validly.excpetion.ValidationErrorException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -73,7 +73,7 @@ public class FailFastModeTest {
         try {
             rule.accept(value);
             Assert.fail("No failure for: " + value);
-        } catch (ValidationFailureException e) {
+        } catch (ValidationErrorException e) {
             print(expectedMessage + " -> " + e.getMessage());
             assertTrue(e.getMessage().contains(expectedMessage));
         }

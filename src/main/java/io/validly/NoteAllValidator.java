@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Class for starting a validation rule in Note-All mode:
  * <p>
- * In this mode each validation predicate will be evaluated and failures are gathered with a message into a {@link List}
+ * In this mode each validation predicate will be evaluated and errors are gathered with a message into a {@link List}
  * or {@link ValidlyNote} object provided.
  * <p>
  * The evaluation process will stop without completing all the predicates in the following cases:<br>

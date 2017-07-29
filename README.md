@@ -29,7 +29,7 @@ public class Validator {
 ```
 Validly has three different validation modes. 
 
-1. **Fail-Fast**: throws a ValidationFailureException when validation error occurs. (Example above)
+1. **Fail-Fast**: throws a ValidationErrorException when validation error occurs. (Example above)
 2. **Note-First**: gathers the first error of each value into a List or Notification object.
 3. **Note-All**: gathers all the errors of each value into a List or Notification object. 
 

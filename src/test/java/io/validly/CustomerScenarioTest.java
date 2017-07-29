@@ -1,6 +1,6 @@
 package io.validly;
 
-import io.validly.excpetion.ValidationFailureException;
+import io.validly.excpetion.ValidationErrorException;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -134,7 +134,7 @@ public class CustomerScenarioTest {
     }
 
 
-    @Test(expected = ValidationFailureException.class)
+    @Test(expected = ValidationErrorException.class)
     public void testFailFast() throws Exception {
         Customer customer = new Customer();
         customer.setFirstName("J");
@@ -193,7 +193,7 @@ public class CustomerScenarioTest {
 
     }
 
-    @Test(expected = ValidationFailureException.class)
+    @Test(expected = ValidationErrorException.class)
     public void testWhenWithStringFailFast() throws Exception {
         String value = "valu";
 

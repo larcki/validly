@@ -1,6 +1,6 @@
 package io.validly;
 
-import io.validly.excpetion.ValidationFailureException;
+import io.validly.excpetion.ValidationErrorException;
 
 import static io.validly.NoteFirstValidator.*;
 
@@ -24,7 +24,7 @@ public class Validator {
         return note;
     }
 
-    public void validate(String input) throws ValidationFailureException {
+    public void validate(String input) throws ValidationErrorException {
 
     }
 
