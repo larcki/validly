@@ -1,20 +1,14 @@
-package com.validly;
+package io.validly;
 
 import java.util.List;
 
 /**
- * Class for starting a validation rule in Note-All mode:
+ * Class for starting a validation rule in Note-First mode:
  * <p>
- * In this mode each validation predicate will be evaluated and failures are gathered with a message into a {@link List}
- * or {@link ValidlyNote} object provided.
- * <p>
- * The evaluation process will stop without completing all the predicates in the following cases:<br>
- * <p>
- * 1. The first predicate (mustNotBeNull etc. in {@link PreCondition}) fails.<br>
- * 2. Function given to {@link ValidationEngine#mustConvert} throws an exception or returns a null.<br>
- * 3. Predicate given to {@link ValidationEngine#mustFatally} fails.
+ * In this mode the validation predicates will be evaluated in sequential order until the first failure occurs which
+ * will be then added with a message into a {@link List} or {@link ValidlyNote} object provided.
  */
-public class NoteAllValidator {
+public class NoteFirstValidator {
 
     /**
      * Starts a type {@link String} validation rule with {@link ValidlyNote} note.
@@ -26,7 +20,7 @@ public class NoteAllValidator {
      */
     public static PreConditionString valid(String value, String fieldName, ValidlyNote note) {
         ValidationEngineString validator = new ValidationEngineString(fieldName, value, note);
-        validator.setFailOnFirst(false);
+        validator.setFailOnFirst(true);
         return new PreConditionString(validator);
     }
 
@@ -39,7 +33,7 @@ public class NoteAllValidator {
      */
     public static PreConditionString valid(String value, List<String> note) {
         ValidationEngineString validator = new ValidationEngineString(value, note);
-        validator.setFailOnFirst(false);
+        validator.setFailOnFirst(true);
         return new PreConditionString(validator);
     }
 
@@ -53,7 +47,7 @@ public class NoteAllValidator {
      */
     public static PreConditionInteger valid(Integer value, String fieldName, ValidlyNote note) {
         ValidationEngineInteger validator = new ValidationEngineInteger(fieldName, value, note);
-        validator.setFailOnFirst(false);
+        validator.setFailOnFirst(true);
         return new PreConditionInteger(validator);
     }
 
@@ -66,7 +60,7 @@ public class NoteAllValidator {
      */
     public static PreConditionInteger valid(Integer value, List<String> note) {
         ValidationEngineInteger validator = new ValidationEngineInteger(value, note);
-        validator.setFailOnFirst(false);
+        validator.setFailOnFirst(true);
         return new PreConditionInteger(validator);
     }
 
@@ -80,12 +74,12 @@ public class NoteAllValidator {
      */
     public static <T> PreCondition<T, ValidationEngine> valid(T value, String fieldName, ValidlyNote note) {
         ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(fieldName, value, note);
-        validationEngine.setFailOnFirst(false);
+        validationEngine.setFailOnFirst(true);
         return new PreCondition<>(validationEngine);
     }
 
     /**
-     * Starts a type {@link T} validation rule with {@link List} note.
+     * Starts a type {@link Integer} validation rule with {@link List} note.
      *
      * @param value value being validated
      * @param note  notification object where the messages are gathered
@@ -93,7 +87,7 @@ public class NoteAllValidator {
      */
     public static <T> PreCondition<T, ValidationEngine> valid(T value, List<String> note) {
         ValidationEngine<T, ValidationEngine> validationEngine = new ValidationEngine<>(value, note);
-        validationEngine.setFailOnFirst(false);
+        validationEngine.setFailOnFirst(true);
         return new PreCondition<>(validationEngine);
     }
 

@@ -1,4 +1,4 @@
-package com.validly.excpetion;
+package io.validly.excpetion;
 
 /**
  * Exception for Fail-Fast validator mode.

@@ -1,4 +1,4 @@
-package com.validly;
+package io.validly;
 
 import java.util.Arrays;
 import java.util.Objects;

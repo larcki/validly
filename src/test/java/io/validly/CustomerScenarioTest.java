@@ -1,6 +1,6 @@
-package com.validly;
+package io.validly;
 
-import com.validly.excpetion.ValidationFailureException;
+import io.validly.excpetion.ValidationFailureException;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.validly.NoteFirstValidator.valid;
+import static io.validly.NoteFirstValidator.valid;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static junit.framework.Assert.assertTrue;
 
@@ -109,23 +109,23 @@ public class CustomerScenarioTest {
 
         List<String> note = new ArrayList<>();
 
-        valid(customer.getName(), note)
+        NoteFirstValidator.valid(customer.getName(), note)
                 .mustNotBeBlank("mustNotBeBlank")
                 .must(s -> s.startsWith("K"), "start with fails")
                 .lengthMustNotExceed(100, "lengthMustNotExceed");
 
-        valid(customer.getAge(), note)
+        NoteFirstValidator.valid(customer.getAge(), note)
                 .mustNotBeNull("mustNotBeNull")
                 .valueMustBeAtLeast(1, "valueMustBeAtLeast")
                 .valueMustNotExceed(130, "valueMustNotExceed");
 
-        valid(customer.getReferralCode(), note)
+        NoteFirstValidator.valid(customer.getReferralCode(), note)
                 .canBeNull()
                 .mustStartWith("REF", "mustStartWith")
                 .mustContain("-", "mustContain")
                 .lengthMustBeWithin(10, 20, "lengthMustBeWithin");
 
-        valid(customer.getSsn(), note)
+        NoteFirstValidator.valid(customer.getSsn(), note)
                 .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
                 .lengthMustNotExceed(10, "lengthMustNotExceed");
 
@@ -170,7 +170,7 @@ public class CustomerScenarioTest {
 
         List<String> note = new ArrayList<>();
 
-        valid(instant, note)
+        NoteFirstValidator.valid(instant, note)
                 .mustNotBeNull("mustNotBeNull")
                 .must(i -> i.isAfter(Instant.now()), "customMustCondition")
                 .must(i -> i.isBefore(Instant.now().plus(3, ChronoUnit.DAYS)), "AAA");
@@ -208,7 +208,7 @@ public class CustomerScenarioTest {
         String value = null;
         List<String> note = new ArrayList<>();
 
-        valid(value, note)
+        NoteFirstValidator.valid(value, note)
                 .canBeNull()
                 .when(s -> s.contains("something"));
 

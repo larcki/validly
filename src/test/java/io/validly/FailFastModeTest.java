@@ -1,18 +1,18 @@
-package com.validly;
+package io.validly;
 
+import io.validly.excpetion.ValidationFailureException;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-import static com.validly.NoteTestUtil.failure;
-import static com.validly.NoteTestUtil.success;
+import static org.junit.Assert.assertTrue;
 
-public class NoteFirstModeTest {
+public class FailFastModeTest {
 
     @Test
     public void testWhen() throws Exception {
-        BiConsumer<String, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
+        Consumer<String> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeNull("mustNotBeNull")
                 .when(s -> s.startsWith("123"), Then.must(s -> s.endsWith("789"), "must end 789"))
                 .when(s -> s.startsWith("987"), Then.must(s -> s.endsWith("321"), "must end 321"));
@@ -22,12 +22,12 @@ public class NoteFirstModeTest {
         success("111 111", rule);
         failure("123 123", rule, "must end 789");
         failure("987 123", rule, "must end 321");
-        failure(null, rule, "mustNotBeNull");
+        failure(null, rule, "");
     }
 
     @Test
     public void testMust() throws Exception {
-        BiConsumer<String, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
+        Consumer<String> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeNull("mustNotBeNull")
                 .must(s -> s.startsWith("123"), "must start 123")
                 .must(s -> s.endsWith("999"), "must end 999");
@@ -37,26 +37,26 @@ public class NoteFirstModeTest {
         failure("123", rule, "must end 999");
         failure("999", rule, "must start 123");
         failure("111", rule, "must start 123");
-        failure(null, rule, "mustNotBeNull");
+        failure(null, rule, "");
     }
 
     @Test
     public void testStringBasics() throws Exception {
-        BiConsumer<String, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
+        Consumer<String> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeBlank("mustNotBeBlank")
                 .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
                 .lengthMustNotExceed(3, "lengthMustNotExceed");
 
         success("22", rule);
         success("333", rule);
-        failure("1", rule, "lengthMustBeAtLeast");
-        failure("4444", rule, "lengthMustNotExceed");
-        failure("", rule, "mustNotBeBlank");
+        failure("1", rule, "");
+        failure("4444", rule, "");
+        failure("", rule, "");
     }
 
     @Test
     public void testIntegerBasics() throws Exception {
-        BiConsumer<Integer, List<String>> rule = (value, note) -> NoteFirstValidator.valid(value, note)
+        Consumer<Integer> rule = value -> FailFastValidator.valid(value)
                 .mustNotBeNull("mustNotBeNull")
                 .valueMustBeAtLeast(1, "valueMustBeAtLeast")
                 .valueMustNotExceed(10, "valueMustNotExceed");
@@ -64,9 +64,27 @@ public class NoteFirstModeTest {
         success(1, rule);
         success(3, rule);
         success(10, rule);
-        failure(0, rule, "valueMustBeAtLeast");
-        failure(15, rule, "valueMustNotExceed");
-        failure(null, rule, "mustNotBeNull");
+        failure(0, rule, "");
+        failure(15, rule, "");
+        failure(null, rule, "");
+    }
+
+    private <T> void failure(T value, Consumer<T> rule, String expectedMessage) {
+        try {
+            rule.accept(value);
+            Assert.fail("No failure for: " + value);
+        } catch (ValidationFailureException e) {
+            print(expectedMessage + " -> " + e.getMessage());
+            assertTrue(e.getMessage().contains(expectedMessage));
+        }
+    }
+
+    private <T> void success(T value, Consumer<T> rule) {
+        rule.accept(value);
+    }
+
+    private void print(String message) {
+        System.out.println(message);
     }
 
 }

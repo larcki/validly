@@ -1,10 +1,12 @@
-package com.validly;
+package io.validly;
 
+
+import io.validly.excpetion.ValidationFailureException;
 
 /**
  * Class for starting a validation rule in Fail-Fast mode:
  * <p>
- * {@link com.validly.excpetion.ValidationFailureException} will be thrown when the first validation failure occurs.
+ * {@link ValidationFailureException} will be thrown when the first validation failure occurs.
  */
 public class FailFastValidator {
 

@@ -1,4 +1,4 @@
-package com.validly;
+package io.validly;
 
 public final class PreConditionString extends PreCondition<String, ValidationEngineString> {
 

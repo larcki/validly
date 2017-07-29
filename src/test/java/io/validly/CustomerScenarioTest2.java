@@ -1,10 +1,10 @@
-package com.validly;
+package io.validly;
 
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.validly.NoteFirstValidator.*;
+import static io.validly.NoteFirstValidator.*;
 
 public class CustomerScenarioTest2 {
 
