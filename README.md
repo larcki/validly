@@ -2,12 +2,13 @@ Validly - Validation library for Java 8
 =======================================
 [![Build Status](https://travis-ci.org/larcki/validly.svg?branch=master)](https://travis-ci.org/larcki/validly)
 
-Validly provides a clean and convenient way of implementing validation logic by abstracting away the conditional constructs and imperative nature of Java. 
+Validly provides a clean and convenient way of implementing validation logic by abstracting away the conditional constructs and imperative style of the Java language. 
 
 Validly allows you to:
 
 * Focus on expressing the validation rules in declarative way instead of writing an if-else mess.
-* Use [Notification pattern](https://martinfowler.com/articles/replaceThrowWithNotification.html) to capture all the validation errors.
+* Use [Notification pattern](https://martinfowler.com/articles/replaceThrowWithNotification.html) to report all the validation errors.
+* Write your own domain specific validation language by extending Validly.
 
 Using Validly
 -------------
