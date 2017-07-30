@@ -1,9 +1,14 @@
 package io.validly;
 
+import java.util.List;
+
 public class Address {
 
+    private String country;
+    private String state;
     private String postCode;
-    private String countryCode;
+    private String moveInDate;
+    private List<String> addressLines;
 
     public String getPostCode() {
         return postCode;
@@ -13,11 +18,23 @@ public class Address {
         this.postCode = postCode;
     }
 
-    public String getCountryCode() {
-        return countryCode;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getMoveInDate() {
+        return moveInDate;
+    }
+
+    public List<String> getAddressLines() {
+        return addressLines;
+    }
+
+    public String getState() {
+        return state;
     }
 }
