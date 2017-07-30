@@ -12,7 +12,7 @@ Validly allows you to:
 Using Validly
 -------------
 
-#### Basics #####
+### Basics ###
 ```java
 import static com.validly.FailFastValidator.*;
 
@@ -59,53 +59,34 @@ public class CustomerScenario {
     }
 }
 ```
-#### Conditions and conversions #####
+### Conditions and conversions ###
+#### When ####
+Build a conditional validation with **when**-method by providing a boolean and at least one **Then** predicate. Then will only be evaluated if the preceding boolean is true.
 ```java
-import static io.validly.NoteFirstValidator.*;
-
-public class AddressScenario {
-
-    public ValidlyNote validate(Address address) {
-        ValidlyNote note = new Notification();
-
-        valid(address.getCountry(), "country", note)
-                .mustNotBeBlank("Is required");
-
-        valid(address.getState(), "state", note)
-                .when(countryRequiresState(address), // when takes one or more Then-predicates
-                        Then.mustNotBeNull("Is required"), // both are evaluated only if when is true
-                        Then.must(validForCountry(address), "Invalid value"));
-
-        // convert to LocalDate and use that type after conversion
-        valid(address.getMoveInDate(), "moveInDate", note)
-                .canBeNull()
-                .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "Invalid value") 
-                .must(d -> d.isBefore(LocalDate.now()), "Must be in the past");
-
-        // input type is inferred (List<String> in this case) and usable for must-predicates
-        valid(address.getAddressLines(), "addressLines", note)
-                .mustNotBeNull("Is required")
-                .must(lines -> lines.size() >= 2, "min two required")
-                .must(lines -> lines.stream().allMatch(s -> s.length() < 100), "must be under 100 chars");
-
-        valid(address.getPostCode(), "postCode", note)
-                .mustNotBeBlank("is required")
-                .lengthMustBeWithin(4, 12, "invalid value")
-                .when(isUsa(address), Then.must(s -> s.matches("us.zipcode.regex"), "invalid value"))
-                .when(isUk(address), Then.must(s -> s.matches("uk.postcode.regex"), "invalid value"));
-
-        return note;
-    }
-    
-    private boolean countryRequiresState(Address address) {
-        return isUsa(address) || isUk(address);
-    }
-    /* Omitted rest of the methods and constants */
-}
+valid(address.getState(), "state", note)
+    .when(countryRequiresState(address),
+        Then.mustNotBeNull("Is required"),
+        Then.must(validForCountry(address), "Invalid value"));
 ```
-#### Notification #####
+#### mustConvert ####
+Convert the input type by providing a Function to **mustConvert**-method. The new type is usable in the subsequent predicates. If the provided conversion Function throws an Exception or returns a null value, a validation error occurs and the subsequent predicates will not be evaluated (even in Note-All mode).
+```java
+valid(address.getMoveInDate(), "moveInDate", note)
+    .canBeNull()
+    .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "Invalid value") 
+        .must(d -> d.isBefore(LocalDate.now()), "Must be in the past");
+```
+#### Type inference ####
+Validation engine always infers the type of the provided input. In this case the type is List\<String\>:
+```java
+valid(address.getAddressLines(), "addressLines", note)
+    .mustNotBeNull("Is required")
+    .must(lines -> lines.size() >= 2, "min two required") // input type is usable here
+    .must(lines -> lines.stream().allMatch(s -> s.length() < 100), "must be under 100 chars");
+```
+### Notification ###
 
-#### DSL with Validly ####
+### DSL with Validly ###
 Create a clean DSL for your validation by naming the custom predicates to be in line with the Validly's must-convention:
 ```java
 import static io.validly.NoteAllValidator.valid;
