@@ -61,8 +61,50 @@ public class CustomerScenario {
 ```
 #### Conditions and conversions #####
 ```java
-address case
+import static io.validly.NoteFirstValidator.*;
+
+public class AddressScenario {
+
+    public ValidlyNote validate(Address address) {
+        ValidlyNote note = new Notification();
+
+        valid(address.getCountry(), "country", note)
+                .mustNotBeBlank("Is required");
+
+        valid(address.getState(), "state", note)
+                .when(countryRequiresState(address), // when takes one or more Then-predicates
+                        Then.mustNotBeNull("Is required"), // both are evaluated only if when is true
+                        Then.must(validForCountry(address), "Invalid value"));
+
+        // convert to LocalDate and use that type after conversion
+        valid(address.getMoveInDate(), "moveInDate", note)
+                .canBeNull()
+                .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "Invalid value") 
+                .must(d -> d.isBefore(LocalDate.now()), "Must be in the past");
+
+        // input type is inferred (List<String> in this case) and usable for must-predicates
+        valid(address.getAddressLines(), "addressLines", note)
+                .mustNotBeNull("Is required")
+                .must(lines -> lines.size() >= 2, "min two required")
+                .must(lines -> lines.stream().allMatch(s -> s.length() < 100), "must be under 100 chars");
+
+        valid(address.getPostCode(), "postCode", note)
+                .mustNotBeBlank("is required")
+                .lengthMustBeWithin(4, 12, "invalid value")
+                .when(isUsa(address), Then.must(s -> s.matches("us.zipcode.regex"), "invalid value"))
+                .when(isUk(address), Then.must(s -> s.matches("uk.postcode.regex"), "invalid value"));
+
+        return note;
+    }
+    
+    private boolean countryRequiresState(Address address) {
+        return isUsa(address) || isUk(address);
+    }
+    /* Omitted rest of the methods and constants */
+}
 ```
+#### Notification #####
+
 #### DSL with Validly ####
 Create a clean DSL for your validation by naming the custom predicates to be in line with the Validly's must-convention:
 ```java
