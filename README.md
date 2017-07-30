@@ -12,7 +12,7 @@ Validly allows you to:
 Using Validly
 -------------
 
-#### Basic syntax #####
+#### Basics #####
 ```java
 import static com.validly.FailFastValidator.*;
 
@@ -33,12 +33,12 @@ Validly has three different validation modes.
 2. **Note-First**: gathers the first error of each value into a List or Notification object.
 3. **Note-All**: gathers all the errors of each value into a List or Notification object. 
 
-Fail-Fast mode is ideal when validating one input value. Replacing throwing exceptions with notification makes sense if you want to gather all (or the first) validation errors - ideal when validating domain objects.
+Fail-Fast mode is ideal when validating one input value. [Replacing throwing exceptions with notification](https://martinfowler.com/articles/replaceThrowWithNotification.html) makes sense if you want to report more than just the first occurring validation error - ideal when validating domain objects:
 ```java
-// If you want to gather every error of each field use NoteAllValidator
+// If you want to report every error of each field use NoteAllValidator
 import static com.validly.NoteFirstValidator.*; 
 
-public class Validator {
+public class CustomerScenario {
 
     public Notification validate(Customer customer) {
         Notification note = new Notification(); // You can also use List
@@ -59,6 +59,53 @@ public class Validator {
     }
 }
 ```
+#### Conditions and conversions #####
+```java
+address case
+```
+#### DSL with Validly ####
+Create a clean DSL for your validation by naming the custom predicates to be in line with the Validly's must-convention:
+```java
+import static io.validly.NoteAllValidator.valid;
+
+public class PasswordScenario {
+
+    public List<String> validate(PasswordChangeRequest passwordChangeRequest) {
+        List<String> note = new ArrayList<>();
+
+        valid(passwordChangeRequest.getNewPassword(), note)
+                .mustNotBeBlank("Is null or empty")
+                .lengthMustBeAtLeast(6, "Too short")
+                .lengthMustNotExceed(24, "Too long")
+                .must(notContain(" "), "Contains space")
+                .must(containDigits() // Using Predicate's and-method to compose two predicates
+                        .and(containLetters()), "Doesn't contain numbers and letters")
+                .must(notBlacklisted(), "Blacklisted value");
+                
+        valid(passwordChangeRequest.getCurrentPassword(), note)
+                .must(equalActualCurrentPassword(), "Invalid current password");
+
+        return note;
+    }
+
+    private Predicate<String> notBlacklisted() {
+        return BLACKLIST::contains;
+    }
+    private Predicate<String> containDigits() {
+        return s -> s.matches(".*\\d.*");
+    }
+    private Predicate<String> containLetters() {
+        return s -> s.matches(".*[a-zA-Z]+.*");
+    }
+    private Predicate<String> notContain(CharSequence... value) {
+        return s -> !Arrays.asList(value).contains(s);
+    }
+    private Predicate<String> equalActualCurrentPassword() {
+        return customerService::passwordEquals;
+    }
+}
+```
+
 
 
 
