@@ -4,9 +4,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static io.validly.NoteFirstValidator.*;
+import static io.validly.NoteFirstValidator.valid;
 
-public class CustomerScenarioTest2 {
+public class CustomerScenario {
 
     public static final String BLANK_NOT_ALLOWED = "Can't be null or empty value";
     public static final String TOO_LONG_20 = "Can't be longer than 20";

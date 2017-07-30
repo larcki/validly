@@ -2,6 +2,7 @@ package io.validly;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class PreCondition<T, FV extends ValidationEngine> {
 
@@ -76,6 +77,9 @@ public class PreCondition<T, FV extends ValidationEngine> {
         return this.validationEngine;
     }
 
+    public ValidationEngine<T, ? extends ValidationEngine> must(Predicate<T> predicate, String message) {
+        return this.validationEngine.must(predicate, message);
+    }
 
 }
 
