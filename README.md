@@ -64,7 +64,7 @@ public class CustomerScenario {
 #### When ####
 Build a conditional validation with **when**-method by providing a boolean and at least one **Then** predicate. Then will only be evaluated if the preceding boolean is true.
 ```java
-valid(address.getState(), "state", note)
+valid(address.getState(), note)
     .when(countryRequiresState(address),
         Then.mustNotBeNull("Is required"),
         Then.must(validForCountry(address), "Invalid value"));
@@ -72,7 +72,7 @@ valid(address.getState(), "state", note)
 #### mustConvert ####
 Convert the input type by providing a Function to **mustConvert**-method. The new type is usable in the subsequent predicates. If the provided conversion Function throws an Exception or returns a null value, a validation error occurs and the subsequent predicates will not be evaluated (even in Note-All mode).
 ```java
-valid(address.getMoveInDate(), "moveInDate", note)
+valid(address.getMoveInDate(), note)
     .canBeNull()
     .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "Invalid value") 
         .must(d -> d.isBefore(LocalDate.now()), "Must be in the past");
@@ -80,7 +80,7 @@ valid(address.getMoveInDate(), "moveInDate", note)
 #### Type inference ####
 Validation engine always infers the type of the provided input. In this case the type is List\<String\>:
 ```java
-valid(address.getAddressLines(), "addressLines", note)
+valid(address.getAddressLines(), note)
     .mustNotBeNull("Is required")
     .must(lines -> lines.size() >= 2, "min two required") // input type is usable here
     .must(lines -> lines.stream().allMatch(s -> s.length() < 100), "must be under 100 chars");
