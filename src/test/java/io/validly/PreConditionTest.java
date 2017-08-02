@@ -10,15 +10,25 @@ import static io.validly.NoteTestUtil.success;
 
 public class PreConditionTest {
 
-    private final BiConsumer<Object, List<String>> mustNotBeNullRule = (value, note) ->
+    private final BiConsumer<Object, List<String>> mustNotBeNull = (value, note) ->
             NoteFirstValidator.valid(value, note)
                     .mustNotBeNull("value is null");
+
+    private final BiConsumer<Object, List<String>> mustNotBeNull_withFailingSubsequentPredicate = (value, note) ->
+            NoteAllValidator.valid(value, note)
+                    .mustNotBeNull("value is null")
+                    .must(s -> false, "subsequent predicate failed");
 
     private final BiConsumer<String, List<String>> mustNotBeBlank = (value, note) ->
             NoteFirstValidator.valid(value, note)
                     .mustNotBeBlank("value is blank");
 
-    private final BiConsumer<String, List<String>> canBeNullRule = (value, note) ->
+    private final BiConsumer<String, List<String>> mustNotBeBlank_withFailingSubsequentPredicate = (value, note) ->
+            NoteAllValidator.valid(value, note)
+                    .mustNotBeBlank("value is blank")
+                    .must(s -> false, "subsequent predicate failed");
+
+    private final BiConsumer<String, List<String>> canBeNull = (value, note) ->
             NoteFirstValidator.valid(value, note)
                     .canBeNull();
 
@@ -37,12 +47,17 @@ public class PreConditionTest {
 
     @Test
     public void mustNotBeNull_shouldFail_whenNullValue() throws Exception {
-        failure(null, mustNotBeNullRule, "value is null");
+        failure(null, mustNotBeNull, "value is null");
     }
 
     @Test
     public void mustNotBeNull_shouldPass_whenNonNullValue() throws Exception {
-        success(new Object(), mustNotBeNullRule);
+        success(new Object(), mustNotBeNull);
+    }
+
+    @Test
+    public void mustNotBeNull_noteAllMode_shouldNotEvaluateSubsequentPredicate_whenValueNull() throws Exception {
+        failure(null, mustNotBeNull_withFailingSubsequentPredicate, "value is null");
     }
 
     @Test
@@ -61,13 +76,18 @@ public class PreConditionTest {
     }
 
     @Test
+    public void mustNotBeBlank_noteAllMode_shouldNotEvaluateSubsequentPredicate_whenValueNull() throws Exception {
+        failure(null, mustNotBeBlank_withFailingSubsequentPredicate, "value is blank");
+    }
+
+    @Test
     public void canBeNull_shouldPass_whenNullValue() throws Exception {
-        success(null, canBeNullRule);
+        success(null, canBeNull);
     }
 
     @Test
     public void canBeNull_shouldPass_whenNonNullValue() throws Exception {
-        success("not null", canBeNullRule);
+        success("not null", canBeNull);
     }
 
     @Test

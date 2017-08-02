@@ -1,76 +1,140 @@
 package io.validly;
 
 import io.validly.excpetion.ValidationErrorException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static io.validly.NoteFirstValidator.valid;
+import static io.validly.NoteTestUtil.failure;
+import static io.validly.NoteTestUtil.success;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static junit.framework.Assert.assertTrue;
 
-public class CustomerScenarioTest {
+public class ValidationEngineTest {
 
-    @Test
-    public void testBasicCustomerValidation() {
-        Customer customer = new Customer();
-        customer.setFirstName("J");
-        customer.setAge(0);
-        customer.setReferralCode("REF.111122223333");
-        customer.setSsn("tooLongValue");
-        List<String> merits = Arrays.asList("one", "two");
-        customer.setPhoneNumbers(merits);
+    private final BiConsumer<String, List<String>> mustConvert_date = (value, note) ->
+            NoteFirstValidator.valid(value, note)
+                    .canBeNull()
+                    .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "convert failed");
 
-        Notification note = new Notification();
+    private static BiConsumer<String, List<String>> must(Predicate<String> predicate) {
+        return (value, note) ->
+                NoteFirstValidator.valid(value, note)
+                        .canBeNull()
+                        .must(predicate, "predicate failed");
+    }
 
-        valid(customer.getName(), "firstName", note)
-                .mustNotBeBlank("mustNotBeBlank")
-                .lengthMustBeAtLeast(2, "lengthMustBeAtLeast")
-                .lengthMustNotExceed(100, "lengthMustNotExceed");
+    private static BiConsumer<String, List<String>> mustFatally(Predicate<String> predicate) {
+        return (value, note) ->
+                NoteAllValidator.valid(value, note)
+                        .canBeNull()
+                        .mustFatally(predicate, "predicate failed")
+                        .must(s -> false, "subsequent predicate failed");
+    }
 
-        valid(customer.getAge(), "age", note)
-                .mustNotBeNull("mustNotBeNull")
-                .valueMustBeAtLeast(1, "valueMustBeAtLeast")
-                .valueMustNotExceed(130, "valueMustNotExceed");
+    private static BiConsumer<String, List<String>> mustConvert(Function<String, LocalDate> function) {
+        return (value, note) ->
+                NoteAllValidator.valid(value, note)
+                        .canBeNull()
+                        .mustConvert(function, "must convert failed")
+                        .must(s -> false, "subsequent predicate failed");
+    }
 
-        valid(customer.getReferralCode(), "referralCode", note)
-                .canBeNull()
-                .mustStartWith("REX", "mustStartWith")
-                .mustContain("-", "mustContain")
-                .lengthMustBeWithin(10, 20, "lengthMustBeWithin");
+    private static BiConsumer<String, List<String>> when(boolean whenCondition) {
+        return (value, note) -> {
+            NoteFirstValidator.valid(value, note)
+                    .canBeNull()
+                    .when(whenCondition, Then.must(s -> false, "then failed"));
+        };
+    }
 
-        valid(customer.getSsn(), "ssn", note)
-                .mustNotBeNullWhen(customer.getAge() > 18, "mustNotBeNull")
-                .lengthMustNotExceed(10, "lengthMustNotExceed");
-
-        valid(customer.getPhoneNumbers(), "merits", note)
-                .mustNotBeNull("must not be null")
-                .must(strings -> strings.size() > 2, "should have more than two merits");
-
-        print(note);
-
+    private static BiConsumer<String, List<String>> when_predicate(Predicate<String> predicate) {
+        return (value, note) -> {
+            NoteFirstValidator.valid(value, note)
+                    .canBeNull()
+                    .when(predicate, Then.must(s -> false, "then failed"));
+        };
     }
 
     @Test
-    public void testDateString() throws Exception {
-        String date = "12.12.2014";
-
-        Notification note = new Notification();
-
-        valid(date, "date", note)
-                .mustNotBeNull("mustNotBeNull")
-                .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "mustConvert")
-                .must(d -> d.isAfter(LocalDate.now()), "date must be in the future");
-
-        print(note);
+    public void must_shouldFail_whenPredicateFalse() throws Exception {
+        failure("value", must(s -> false), "predicate failed");
     }
 
     @Test
+    public void must_shouldPass_whenPredicateTrue() throws Exception {
+        success("value", must(s -> true));
+    }
+
+    @Test
+    public void mustFatally_shouldFailAndNotEvaluateSubsequentPredicates_whenPredicateFalse() throws Exception {
+        failure("value", mustFatally(s -> false), "predicate failed");
+    }
+
+    @Test
+    public void mustFatally_shouldFailOnSubsequentPredicate_whenPredicateTrue() throws Exception {
+        failure("value", mustFatally(s -> true), "subsequent predicate failed");
+    }
+
+    @Test
+    public void mustConvert_shouldPass_whenValidValue() throws Exception {
+        success("12.12.2017", mustConvert_date);
+    }
+
+    @Test
+    public void mustConvert_shouldFail_whenInvalidValue() throws Exception {
+        failure("invalid", mustConvert_date, "convert failed");
+    }
+
+    @Test
+    public void mustConvert_shouldFailAndNotEvaluateSubsequentPredicates_whenFunctionThrowsException() throws Exception {
+        BiConsumer<String, List<String>> rule = mustConvert(s -> {
+            throw new RuntimeException("test");
+        });
+        failure("value", rule, "must convert failed");
+    }
+
+    @Test
+    public void mustConvert_shouldFailAndNotEvaluateSubsequentPredicates_whenFunctionReturnsNull() throws Exception {
+        BiConsumer<String, List<String>> rule = mustConvert(s -> null);
+        failure("value", rule, "must convert failed");
+    }
+
+    @Test
+    public void when_shouldEvaluateFailingThenPredicate_whenWhenConditionTrue() throws Exception {
+        BiConsumer<String, List<String>> rule = when(true);
+        failure("value", rule, "then failed");
+    }
+
+    @Test
+    public void when_shouldNotEvaluateFailingThenPredicate_whenWhenConditionFalse() throws Exception {
+        BiConsumer<String, List<String>> rule = when(false);
+        success("value", rule);
+    }
+
+    @Test
+    public void whenWithPredicate_shouldEvaluateFailingThenPredicate_whenWhenPredicateTrue() throws Exception {
+        BiConsumer<String, List<String>> rule = when_predicate(s -> true);
+        failure("value", rule, "then failed");
+    }
+
+    @Test
+    public void whenWithPredicate_shouldNotEvaluateFailingThenPredicate_whenWhenPredicateFalse() throws Exception {
+        BiConsumer<String, List<String>> rule = when_predicate(s -> false);
+        success("value", rule);
+    }
+
+    @Test
+    @Ignore
     public void testDate() throws Exception {
         LocalDate date = LocalDate.of(2016, 12, 3);
 
@@ -86,6 +150,7 @@ public class CustomerScenarioTest {
     }
 
     @Test
+    @Ignore
     public void customValidationAndConditions() throws Exception {
         Address address = new Address();
         address.setPostCode("");
@@ -96,10 +161,10 @@ public class CustomerScenarioTest {
                 .mustNotBeNull("mustNotBeNull")
                 .must(s -> s.matches("//your.regex+"), "customMustCondition");
 
-        //TODO: more cases
     }
 
     @Test
+    @Ignore
     public void testListNote() throws Exception {
         Customer customer = new Customer();
         customer.setFirstName("J");
@@ -165,6 +230,7 @@ public class CustomerScenarioTest {
     }
 
     @Test
+    @Ignore
     public void testCustomClass() throws Exception {
         Instant instant = Instant.now().plus(5, ChronoUnit.DAYS);
 
@@ -179,6 +245,7 @@ public class CustomerScenarioTest {
     }
 
     @Test
+    @Ignore
     public void testWhenWithString() throws Exception {
         String value = "salu";
 
