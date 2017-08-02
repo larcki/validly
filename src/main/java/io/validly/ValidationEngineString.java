@@ -60,13 +60,13 @@ public final class ValidationEngineString extends ValidationEngine<String, Valid
     }
 
     /**
-     * Set a value that does not contain {@link String#contains} the provided string to be considered as invalid.
+     * Set a value that does not contain {@link String#contains} the provided sequence of char values to be considered as invalid.
      *
-     * @param value   the string to search for
+     * @param value   the sequence to search for
      * @param message validation error
      * @return validation engine
      */
-    public ValidationEngineString mustContain(String value, String message) {
+    public ValidationEngineString mustContain(CharSequence value, String message) {
         return must(s -> s.contains(value), message);
     }
 
