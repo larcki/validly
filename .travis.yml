@@ -5,4 +5,4 @@ install: true
 jdk:
 - oraclejdk8
 script: 
-- bundle exec ./gradlew clean test jar
+- ./gradlew clean test jar
