@@ -1,7 +1,7 @@
 Validly - Validation library for Java 8
 =======================================
 [![Build Status](https://travis-ci.org/larcki/validly.svg?branch=master)](https://travis-ci.org/larcki/validly)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.validly/Validly/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.validly/validly)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.validly/Validly/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.validly/Validly)
 
 
 Validly provides a clean and convenient way for implementing validation logic by providing a fluent API and abstracting away the conditional constructs of the language.
