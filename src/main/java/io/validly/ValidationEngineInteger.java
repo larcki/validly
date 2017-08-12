@@ -22,7 +22,7 @@ public final class ValidationEngineInteger extends ValidationEngine<Integer, Val
 
     /**
      * Set a value that is less than the max to be considered as invalid.
-     * valid: v >= min
+     * valid: v &gt;= min
      *
      * @param min     minimum valid value
      * @param message validation error
@@ -34,7 +34,7 @@ public final class ValidationEngineInteger extends ValidationEngine<Integer, Val
 
     /**
      * Set a value that is greater than the max to be considered as invalid.
-     * valid: v <= max
+     * valid: v &lt;= max
      *
      * @param max     maximum valid value
      * @param message validation error

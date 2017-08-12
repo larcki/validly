@@ -22,7 +22,7 @@ public final class ValidationEngineString extends ValidationEngine<String, Valid
 
     /**
      * Set a value with length greater than the max to be considered as invalid.
-     * valid: v.length() <= max
+     * valid: v.length() less or equal than max
      *
      * @param max     maximum valid value
      * @param message validation error
@@ -34,7 +34,7 @@ public final class ValidationEngineString extends ValidationEngine<String, Valid
 
     /**
      * Set a value with length less than the min to be considered as invalid.
-     * valid: v.length() >= min
+     * valid: v.length() greater or equal than min
      *
      * @param min     minimum valid value
      * @param message validation error

@@ -54,8 +54,8 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
      * E.g.<br>
      * value(name, note)<br>
      * .mustNotBeNull("")<br>
-     * .mustFatally(s -> s.equals("something"), "") <-- if this fails<br>
-     * .must(s -> s.startsWith("so"), "")           <-- this won't be evaluated<br>
+     * .mustFatally(s -&gt; s.equals("something"), "") -- if this fails<br>
+     * .must(s -&gt; s.startsWith("so"), "")           -- this won't be evaluated<br>
      *
      * @param predicate predicate to evaluate
      * @param message   validation error
@@ -76,8 +76,8 @@ public class ValidationEngine<T, FV extends ValidationEngine> {
      * <p>
      * valid(date, "date", note)<br>
      * .mustNotBeNull("must not be null")<br>
-     * .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "invalid date")<br>
-     * .must(d -> d.isAfter(LocalDate.now()), "date must be in the future");<br>
+     * .mustConvert(s -&gt; LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "invalid date")<br>
+     * .must(d -&gt; d.isAfter(LocalDate.now()), "date must be in the future");<br>
      *
      * @param conversionFunction function the is applied with the value as input
      * @param message            validation error
