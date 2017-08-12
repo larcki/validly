@@ -3,4 +3,4 @@ language: java
 jdk:
 - oraclejdk8
 script: 
-- ./gradlew clean test jar
+- bundle exec ./gradlew clean test jar
