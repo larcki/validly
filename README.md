@@ -9,7 +9,7 @@ Validly provides a clean and convenient way for implementing validation logic by
 Validly allows you to:
 
 * Focus on expressing the validation rules in a declarative way instead of writing an if-else mess.
-* Use [Notification pattern](https://martinfowler.com/articles/replaceThrowWithNotification.html) to report all the validation errors.
+* Use <a href="https://martinfowler.com/articles/replaceThrowWithNotification.html" target="_blank">Notification pattern</a> to report all the validation errors.
 * Write your own domain specific validation language by extending Validly.
 
 Using Validly
@@ -36,13 +36,16 @@ public class Validator {
     }
 }
 ```
+Validation rule is defined by passing the value to the valid-method and providing a set of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" target="_blank">Predicates</a>. The library provides predefined predicates (mustNotBeNull, lengthMustBeAtLesast etc.) but custom predicates can be used in with the must-method.
+
+#### Modes ####
 Validly has three different validation modes. 
 
 1. **Fail-Fast**: throws a ValidationErrorException when validation error occurs. (Example above)
 2. **Note-First**: gathers the first error of each value into a List or Notification object.
 3. **Note-All**: gathers all the errors of each value into a List or Notification object. 
 
-Fail-Fast mode is ideal when validating one input value. [Replacing throwing exceptions with notification](https://martinfowler.com/articles/replaceThrowWithNotification.html) makes sense if you want to report more than just the first occurring validation error - ideal when validating domain objects:
+Fail-Fast mode is ideal when validating one input value. <a href="https://martinfowler.com/articles/replaceThrowWithNotification.html" target="_blank">Replacing throwing exceptions with notification</a> makes sense if you want to report more than just the first occurring validation error - ideal when validating domain objects:
 ```java
 // If you want to report every error of each field use NoteAllValidator
 import static com.validly.NoteFirstValidator.*; 
@@ -75,7 +78,7 @@ Build a conditional validation with **when**-method by providing a boolean and a
 valid(address.getState(), note)
     .when(countryRequiresState(address),
         Then.mustNotBeNull("Is required"),
-        Then.must(validForCountry(address), "Invalid value"));
+        Then.must(validStateForCountry(address), "Invalid value"));
 ```
 #### mustConvert ####
 Convert the input type by providing a Function to **mustConvert**-method. The new type is usable in the subsequent predicates. If the provided conversion Function throws an Exception or returns a null value, a validation error occurs and the subsequent predicates will not be evaluated (even in Note-All mode).
@@ -83,7 +86,7 @@ Convert the input type by providing a Function to **mustConvert**-method. The ne
 valid(address.getMoveInDate(), note)
     .canBeNull()
     .mustConvert(s -> LocalDate.parse(s, ofPattern("dd.MM.yyyy")), "Invalid value") 
-        .must(d -> d.isBefore(LocalDate.now()), "Must be in the past");
+    .must(d -> d.isBefore(LocalDate.now()), "Must be in the past");
 ```
 #### Type inference ####
 Validation engine always infers the type of the provided input. In this case the type is List\<String\>:
