@@ -23,7 +23,7 @@ Using Validly
 ```
 ### Basics ###
 ```java
-import static com.validly.FailFastValidator.*;
+import static io.validly.FailFastValidator.*;
 
 public class Validator {
 
@@ -48,7 +48,7 @@ Validly has three different validation modes.
 Fail-Fast mode is ideal when validating one input value. <a href="https://martinfowler.com/articles/replaceThrowWithNotification.html" target="_blank">Replacing throwing exceptions with notification</a> makes sense if you want to report more than just the first occurring validation error - ideal when validating domain objects:
 ```java
 // If you want to report every error of each field use NoteAllValidator
-import static com.validly.NoteFirstValidator.*; 
+import static io.validly.NoteFirstValidator.*; 
 
 public class CustomerScenario {
 
